@@ -1,2 +1,2 @@
-# SUSTechSpring2017Java
+# Flight Booking
 Java project for computer programming lesson in SUSTech
