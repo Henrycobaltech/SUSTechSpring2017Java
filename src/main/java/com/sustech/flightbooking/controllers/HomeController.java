@@ -1,4 +1,4 @@
-package com.sustech.spring2017java.controllers;
+package com.sustech.flightbooking.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

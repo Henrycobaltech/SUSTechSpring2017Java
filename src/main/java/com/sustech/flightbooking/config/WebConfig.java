@@ -1,4 +1,4 @@
-package com.sustech.spring2017java.config;
+package com.sustech.flightbooking.config;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
