@@ -10,6 +10,10 @@ public abstract class FlightBookingUser {
     private String userName;
     private String passwordHash;
 
+    public UUID getId() {
+        return id;
+    }
+
     public FlightBookingUser(UUID id) {
         this.id = id;
     }
