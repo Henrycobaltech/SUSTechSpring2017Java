@@ -51,6 +51,12 @@
             <artifactId>thymeleaf-spring4</artifactId>
             <version>3.0.5.RELEASE</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>5.2.10.Final</version>
+        </dependency>
     </dependencies>
 
     <properties>
