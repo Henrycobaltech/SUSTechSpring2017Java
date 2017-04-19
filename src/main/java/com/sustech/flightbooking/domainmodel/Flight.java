@@ -1,20 +1,22 @@
 package com.sustech.flightbooking.domainmodel;
 
+import javax.persistence.Entity;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
  * Created by Henry on 4/17/2017.
  */
-public class Flight {
-    private UUID id;
+
+@Entity
+public class Flight extends EntityBase {
     private double price;
     private LocalDateTime departureTime;
     private LocalDateTime arrivalTime;
     private int capacity;
 
     public Flight(UUID id, double price, LocalDateTime departureTime, LocalDateTime arrivalTime, int capacity) {
-        this.id = id;
+        super(id);
         this.setPrice(price);
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;

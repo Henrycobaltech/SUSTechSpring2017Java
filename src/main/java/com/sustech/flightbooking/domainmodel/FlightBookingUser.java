@@ -5,17 +5,12 @@ import java.util.UUID;
 /**
  * Created by Henry on 4/17/2017.
  */
-public abstract class FlightBookingUser {
-    private UUID id;
+public abstract class FlightBookingUser extends EntityBase {
     private String userName;
     private String passwordHash;
 
-    public UUID getId() {
-        return id;
-    }
-
     public FlightBookingUser(UUID id) {
-        this.id = id;
+        super(id);
     }
 
     public String getUserName() {
