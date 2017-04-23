@@ -23,10 +23,6 @@ public class Flight extends EntityBase {
         this.setCapacity(capacity);
     }
 
-    public UUID getId() {
-        return id;
-    }
-
     public double getPrice() {
         return price;
     }
