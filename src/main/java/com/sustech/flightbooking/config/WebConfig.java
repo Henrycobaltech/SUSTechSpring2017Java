@@ -19,7 +19,7 @@ import org.thymeleaf.templatemode.TemplateMode;
  */
 @Configuration
 @EnableWebMvc
-@ComponentScan("com.hc.*")
+@ComponentScan("com.sustech.*")
 public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationContextAware {
     private ApplicationContext applicationContext;
 

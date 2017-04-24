@@ -3,6 +3,7 @@ package com.sustech.flightbooking.domainmodel;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -16,6 +17,8 @@ public class Order extends EntityBase {
 
     @Column
     private int seat;
+
+    @ManyToOne(optional = false)
     private Flight flight;
     private Timestamp createdTime;
     private OrderStatus status;

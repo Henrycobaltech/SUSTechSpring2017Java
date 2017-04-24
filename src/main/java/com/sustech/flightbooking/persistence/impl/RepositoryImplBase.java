@@ -1,4 +1,4 @@
-package com.sustech.flightbooking.persistence.Impl;
+package com.sustech.flightbooking.persistence.impl;
 
 import com.sustech.flightbooking.domainmodel.EntityBase;
 import com.sustech.flightbooking.persistence.Repository;

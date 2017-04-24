@@ -1,7 +1,8 @@
-package com.sustech.flightbooking.persistence.Impl;
+package com.sustech.flightbooking.persistence.impl;
 
 import com.sustech.flightbooking.domainmodel.Administrator;
 import com.sustech.flightbooking.persistence.AdministratorsRepository;
+import com.sustech.flightbooking.persistence.impl.UserRepositoryImpl;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,7 @@ import java.util.Optional;
  */
 
 @Repository
-public class AdministratorRepositoryImpl extends RepositoryImplBase<Administrator>
+public class AdministratorRepositoryImpl extends UserRepositoryImpl<Administrator>
         implements AdministratorsRepository {
 
     @Autowired
@@ -26,19 +27,4 @@ public class AdministratorRepositoryImpl extends RepositoryImplBase<Administrato
     protected Class<Administrator> getGenericType() {
         return Administrator.class;
     }
-
-    @Override
-    public Administrator findByUserName(String userName) {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-
-        Optional<Administrator> administrator = createQuery(session).stream()
-                .filter(a -> a.getUserName().equalsIgnoreCase(userName)).findFirst();
-
-        session.getTransaction().commit();
-        session.close();
-        return administrator.orElse(null);
-    }
-
-
 }

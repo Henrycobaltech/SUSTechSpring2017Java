@@ -1,5 +1,6 @@
 package com.sustech.flightbooking.config;
 
+import com.sustech.flightbooking.domainmodel.*;
 import org.hibernate.SessionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,11 +24,16 @@ public class RepositoryConfig {
         prop.setProperty("hibernate.connection.password", "sustc@2017");
         prop.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
 
-        SessionFactory sessionFactory = new org.hibernate.cfg.Configuration()
-                .addPackage("com.sustech")
-                .addProperties(prop)
-                .buildSessionFactory();
-        return sessionFactory;
+        org.hibernate.cfg.Configuration configuration = new org.hibernate.cfg.Configuration()
+                //.addPackage("com.sustech.flightbooking.domainmodel")
+                .addAnnotatedClass(EntityBase.class)
+                .addAnnotatedClass(FlightBookingUser.class)
+                .addAnnotatedClass(Administrator.class)
+                .addAnnotatedClass(Passenger.class)
+                .addAnnotatedClass(Order.class)
+                .addAnnotatedClass(Flight.class)
+                .addProperties(prop);
+        return configuration.buildSessionFactory();
     }
 
 
