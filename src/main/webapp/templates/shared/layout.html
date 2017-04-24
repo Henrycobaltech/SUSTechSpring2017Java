@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div th:replace="~{shared/header :: nav}"></div>
+<div layout:fragment="content"></div>
+<div th:replace="~{shared/footer :: copy}"></div>
+</body>
+</html>

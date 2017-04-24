@@ -1,5 +1,7 @@
 package com.sustech.flightbooking.controllers;
 
+import com.sustech.flightbooking.persistence.AdministratorsRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +13,7 @@ import java.util.Date;
  */
 
 @Controller
+@RequestMapping("/")
 public class HomeController {
 
     @RequestMapping("/")
