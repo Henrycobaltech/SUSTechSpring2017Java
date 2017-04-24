@@ -1,7 +1,6 @@
 package com.sustech.flightbooking.controllers;
 
 import com.sustech.flightbooking.domainmodel.Passenger;
-import com.sustech.flightbooking.persistence.PassengerRepository;
 import com.sustech.flightbooking.services.PassengerService;
 import com.sustech.flightbooking.viewmodel.LoginViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +24,6 @@ public class PassengerController {
     private final PassengerService passengerService;
 
     @Autowired
-    private PassengerRepository prepo;
-
-    @Autowired
     public PassengerController(PassengerService passengerService) {
         this.passengerService = passengerService;
     }
@@ -36,7 +32,8 @@ public class PassengerController {
     public String login(Model model) {
         Passenger p = new Passenger(UUID.randomUUID());
         p.setUserName("aaa");
-        prepo.save(p);
+
+
         model.addAttribute("model", new LoginViewModel());
         return "passengers/login";
     }

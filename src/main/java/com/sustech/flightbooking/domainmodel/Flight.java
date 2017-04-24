@@ -1,6 +1,5 @@
 package com.sustech.flightbooking.domainmodel;
 
-import javax.persistence.Entity;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -8,7 +7,6 @@ import java.util.UUID;
  * Created by Henry on 4/17/2017.
  */
 
-@Entity
 public class Flight extends EntityBase {
     private double price;
     private LocalDateTime departureTime;
