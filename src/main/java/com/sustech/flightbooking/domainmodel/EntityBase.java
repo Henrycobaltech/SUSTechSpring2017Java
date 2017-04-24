@@ -1,5 +1,7 @@
 package com.sustech.flightbooking.domainmodel;
 
+import org.mongodb.morphia.annotations.Id;
+
 import java.util.Objects;
 import java.util.UUID;
 
@@ -9,6 +11,7 @@ import java.util.UUID;
 
 public abstract class EntityBase {
 
+    @Id
     protected UUID id;
 
     public EntityBase(UUID id) {
