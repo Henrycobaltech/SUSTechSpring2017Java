@@ -1,5 +1,6 @@
 package com.sustech.flightbooking.domainmodel;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.sql.Timestamp;
@@ -12,6 +13,8 @@ import java.util.UUID;
 
 @Entity
 public class Order extends EntityBase {
+
+    @Column
     private int seat;
     private Flight flight;
     private Timestamp createdTime;

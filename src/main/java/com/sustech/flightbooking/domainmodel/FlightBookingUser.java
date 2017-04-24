@@ -1,10 +1,13 @@
 package com.sustech.flightbooking.domainmodel;
 
+import javax.persistence.Entity;
+import javax.persistence.MappedSuperclass;
 import java.util.UUID;
 
 /**
  * Created by Henry on 4/17/2017.
  */
+@MappedSuperclass
 public abstract class FlightBookingUser extends EntityBase {
     private String userName;
     private String passwordHash;

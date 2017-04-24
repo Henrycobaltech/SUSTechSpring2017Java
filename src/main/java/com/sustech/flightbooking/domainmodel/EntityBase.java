@@ -1,13 +1,15 @@
 package com.sustech.flightbooking.domainmodel;
 
+import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 import java.util.Objects;
 import java.util.UUID;
 
 /**
  * Created by Henry on 4/19/2017.
  */
-
+@MappedSuperclass
 public abstract class EntityBase {
 
     @Id
