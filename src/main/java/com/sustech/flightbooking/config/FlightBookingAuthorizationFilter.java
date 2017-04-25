@@ -29,7 +29,7 @@ public class FlightBookingAuthorizationFilter implements Filter {
         String path = request.getServletPath();
         if (!authorize(authentication, path, "passenger", "passenger")
                 || !authorize(authentication, path, "admin", "administrator")) {
-            response.sendRedirect("/login");
+            response.sendRedirect("/login?returnUri=" + path);
             return;
         }
         filterChain.doFilter(servletRequest, servletResponse);

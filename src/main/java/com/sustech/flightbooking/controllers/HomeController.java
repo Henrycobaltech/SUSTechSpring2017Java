@@ -9,10 +9,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 
@@ -40,16 +37,21 @@ public class HomeController {
     }
 
     @GetMapping("/login")
-    public String login(Model model) {
-        model.addAttribute("model", new LoginViewModel());
+    public String login(Model model,
+                        @RequestParam(value = "returnUri", required = false) String returnUri) {
+        LoginViewModel viewModel = new LoginViewModel();
+        viewModel.setReturnUri(returnUri);
+        model.addAttribute("model", viewModel);
         return "login";
     }
 
     @PostMapping("/login")
     public String login(@ModelAttribute LoginViewModel model) {
         FlightBookingAuthenticationToken token = service.login(model.getUserName(), model.getPassword());
-        if (token != null)
-            return String.format("redirect:/%s", token.getRole());
+        if (token != null) {
+            String returnUri = model.getReturnUri();
+            return String.format("redirect:%s", returnUri.isEmpty() ? "/" + token.getRole() : returnUri);
+        }
         return "login";
     }
 
