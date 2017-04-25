@@ -1,7 +1,6 @@
 package com.sustech.flightbooking.controllers;
 
 import com.sustech.flightbooking.config.FlightBookingAuthenticationToken;
-import com.sustech.flightbooking.domainmodel.Passenger;
 import com.sustech.flightbooking.persistence.PassengerRepository;
 import com.sustech.flightbooking.services.IdentityService;
 import com.sustech.flightbooking.viewmodel.LoginViewModel;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Date;
-import java.util.UUID;
 
 /**
  * Created by Henry on 4/16/2017.
@@ -40,16 +38,6 @@ public class HomeController {
         modelMap.put("now", new Date());
         return "index";
     }
-
-    @GetMapping("/test")
-    public String test() {
-        Passenger passenger = new Passenger(UUID.randomUUID());
-        passenger.setUserName("test");
-        passenger.setPassword("123456");
-        repo.save(passenger);
-        return "index";
-    }
-
 
     @GetMapping("/login")
     public String login(Model model) {

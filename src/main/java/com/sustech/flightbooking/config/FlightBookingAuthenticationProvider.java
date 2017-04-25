@@ -1,6 +1,5 @@
 package com.sustech.flightbooking.config;
 
-import jdk.nashorn.internal.parser.TokenLookup;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;

@@ -4,6 +4,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -17,9 +19,31 @@ public class FlightBookingAuthorizationFilter implements Filter {
     }
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
+            throws IOException, ServletException {
+        FlightBookingAuthenticationToken authentication =
+                (FlightBookingAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+        HttpServletResponse response = (HttpServletResponse) servletResponse;
+        String path = request.getServletPath();
+        if (!authorize(authentication, path, "passenger", "passenger")
+                || !authorize(authentication, path, "admin", "administrator")) {
+            response.sendRedirect("/login");
+            return;
+        }
         filterChain.doFilter(servletRequest, servletResponse);
+    }
+
+    private boolean authorize(FlightBookingAuthenticationToken authentication,
+                              String path, String controllerPath, String role) {
+        if (path.toLowerCase().startsWith("/" + role)) {
+            if (authentication == null ||
+                    !authentication.getRole().equalsIgnoreCase(role)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
