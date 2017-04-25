@@ -18,4 +18,9 @@ public class AdministratorRepositoryImpl extends UserRepositoryImpl<Administrato
     public AdministratorRepositoryImpl(Datastore datastore) {
         super(datastore);
     }
+
+    @Override
+    protected Class<Administrator> getEntityType() {
+        return Administrator.class;
+    }
 }

@@ -18,4 +18,9 @@ public class PassengerRepositoryImpl
     public PassengerRepositoryImpl(Datastore datastore) {
         super(datastore);
     }
+
+    @Override
+    protected Class<Passenger> getEntityType() {
+        return Passenger.class;
+    }
 }
