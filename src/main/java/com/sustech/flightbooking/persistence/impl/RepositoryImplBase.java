@@ -3,7 +3,6 @@ package com.sustech.flightbooking.persistence.impl;
 import com.sustech.flightbooking.domainmodel.EntityBase;
 import com.sustech.flightbooking.persistence.Repository;
 import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.query.Query;
 
 import java.util.List;
 import java.util.UUID;

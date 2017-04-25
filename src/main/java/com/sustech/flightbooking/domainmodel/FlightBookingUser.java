@@ -1,5 +1,8 @@
 package com.sustech.flightbooking.domainmodel;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
 /**
@@ -23,11 +26,22 @@ public abstract class FlightBookingUser extends EntityBase {
         this.userName = userName;
     }
 
-    public void setPassword(String passwordHash) {
-        this.passwordHash = passwordHash;
+    public void setPassword(String password) {
+        this.passwordHash = hashPassword(password);
     }
 
     public boolean authenticate(String password) {
-        return false;
+        return passwordHash.equals(hashPassword(password));
+    }
+
+    private String hashPassword(String original) {
+        MessageDigest digest = null;
+        try {
+            digest = MessageDigest.getInstance("SHA-256");
+            digest.update(original.getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException | NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return new String(digest.digest());
     }
 }
