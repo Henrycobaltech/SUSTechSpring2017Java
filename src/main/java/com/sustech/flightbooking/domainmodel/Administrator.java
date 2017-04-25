@@ -14,4 +14,9 @@ public class Administrator extends FlightBookingUser {
     public Administrator(UUID id) {
         super(id);
     }
+
+    @Override
+    public String getRole() {
+        return Administrator.class.getName();
+    }
 }

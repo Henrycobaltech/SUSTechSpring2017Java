@@ -44,4 +44,6 @@ public abstract class FlightBookingUser extends EntityBase {
         }
         return new String(digest.digest());
     }
+
+    public abstract String getRole();
 }

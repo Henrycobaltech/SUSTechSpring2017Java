@@ -15,6 +15,11 @@ public class Passenger extends FlightBookingUser {
         super(id);
     }
 
+    @Override
+    public String getRole() {
+        return Passenger.class.getName();
+    }
+
     private String displayName;
     private String identityCardNumber;
 
