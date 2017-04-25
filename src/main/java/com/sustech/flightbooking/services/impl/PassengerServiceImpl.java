@@ -23,8 +23,6 @@ public class PassengerServiceImpl implements PassengerService {
     @Override
     public boolean login(String userName, String password) {
         Passenger passenger = passengerRepository.findByUserName(userName);
-        if (passenger == null)
-            return false;
-        return passenger.authenticate(password);
+        return passenger != null && passenger.authenticate(password);
     }
 }

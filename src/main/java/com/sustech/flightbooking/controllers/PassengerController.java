@@ -34,10 +34,6 @@ public class PassengerController {
 
     @GetMapping("/login")
     public String login(Model model) {
-        Passenger p = new Passenger(UUID.randomUUID());
-        p.setUserName("aaa");
-        repo.save(p);
-
         model.addAttribute("model", new LoginViewModel());
         return "passengers/login";
     }
