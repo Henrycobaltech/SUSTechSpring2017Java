@@ -20,6 +20,6 @@ public class Administrator extends FlightBookingUser {
 
     @Override
     public String getRole() {
-        return Administrator.class.getName();
+        return Administrator.class.getSimpleName();
     }
 }

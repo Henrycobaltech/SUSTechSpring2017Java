@@ -20,7 +20,7 @@ public class Passenger extends FlightBookingUser {
 
     @Override
     public String getRole() {
-        return Passenger.class.getName();
+        return Passenger.class.getSimpleName();
     }
 
     private String displayName;
