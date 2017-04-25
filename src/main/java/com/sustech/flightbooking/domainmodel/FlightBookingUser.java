@@ -3,6 +3,7 @@ package com.sustech.flightbooking.domainmodel;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.UUID;
 
 /**
@@ -13,6 +14,10 @@ public abstract class FlightBookingUser extends EntityBase {
     private String userName;
 
     private String passwordHash;
+
+    public FlightBookingUser() {
+
+    }
 
     public FlightBookingUser(UUID id) {
         super(id);
@@ -42,7 +47,7 @@ public abstract class FlightBookingUser extends EntityBase {
         } catch (UnsupportedEncodingException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-        return new String(digest.digest());
+        return Base64.getEncoder().encodeToString(digest.digest());
     }
 
     public abstract String getRole();

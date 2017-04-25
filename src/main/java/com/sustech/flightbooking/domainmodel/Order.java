@@ -25,6 +25,9 @@ public class Order extends EntityBase {
         super(id);
     }
 
+    public Order() {
+    }
+
     public int getSeat() {
         return seat;
     }

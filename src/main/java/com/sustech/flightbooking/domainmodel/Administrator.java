@@ -11,6 +11,9 @@ import java.util.UUID;
 @Entity
 public class Administrator extends FlightBookingUser {
 
+    public Administrator() {
+    }
+
     public Administrator(UUID id) {
         super(id);
     }

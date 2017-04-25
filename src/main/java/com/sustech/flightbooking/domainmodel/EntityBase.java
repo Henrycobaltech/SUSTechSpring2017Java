@@ -14,6 +14,10 @@ public abstract class EntityBase {
     @Id
     protected UUID id;
 
+    public EntityBase() {
+
+    }
+
     public EntityBase(UUID id) {
         this.id = id;
     }

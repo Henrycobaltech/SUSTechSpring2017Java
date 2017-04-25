@@ -19,31 +19,7 @@ import java.util.UUID;
  */
 
 @Controller
-@RequestMapping("/passengers")
+@RequestMapping("/passenger")
 public class PassengerController {
 
-    private final PassengerService passengerService;
-
-    @Autowired
-    private PassengerRepository repo;
-
-    @Autowired
-    public PassengerController(PassengerService passengerService) {
-        this.passengerService = passengerService;
-    }
-
-    @GetMapping("/login")
-    public String login(Model model) {
-        model.addAttribute("model", new LoginViewModel());
-        return "passengers/login";
-    }
-
-    @PostMapping("/login")
-    public String login(@ModelAttribute LoginViewModel model) {
-        if (passengerService.login(model.getUserName(), model.getPassword())) {
-            //set cookie here
-
-        }
-        return "";
-    }
 }

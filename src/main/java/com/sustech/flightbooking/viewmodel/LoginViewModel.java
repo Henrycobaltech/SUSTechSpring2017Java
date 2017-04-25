@@ -6,7 +6,6 @@ package com.sustech.flightbooking.viewmodel;
 public class LoginViewModel {
     private String userName;
     private String password;
-    private Boolean isPersistent;
     private String returnUri;
 
     public String getUserName() {
@@ -23,14 +22,6 @@ public class LoginViewModel {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public Boolean getIsPersistent() {
-        return isPersistent;
-    }
-
-    public void setIsPersistent(Boolean persistent) {
-        isPersistent = persistent;
     }
 
     public String getReturnUri() {

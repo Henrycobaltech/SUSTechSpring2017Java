@@ -10,6 +10,7 @@ import java.util.UUID;
  */
 @Entity
 public class Flight extends EntityBase {
+
     private double price;
     private LocalDateTime departureTime;
     private LocalDateTime arrivalTime;
@@ -21,6 +22,9 @@ public class Flight extends EntityBase {
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
         this.setCapacity(capacity);
+    }
+
+    public Flight() {
     }
 
     public double getPrice() {

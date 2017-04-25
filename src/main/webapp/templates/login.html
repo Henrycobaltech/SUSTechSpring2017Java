@@ -7,7 +7,7 @@
 <body>
 <div layout:fragment="content">
     <h1>Login</h1>
-    <form action="#" th:action="@{/passengers/login}" th:object="${model}" method="post">
+    <form action="#" th:action="@{/login}" th:object="${model}" method="post">
         <div>
             <label th:for="${#ids.next('userName')}">User Name</label>
             <input type="text" th:field="*{userName}"/>
@@ -16,12 +16,7 @@
             <label th:for="${#ids.next('password')}">Password</label>
             <input type="password" th:field="*{password}"/>
         </div>
-        <div>
-            <span>
-            <input type="checkbox" th:field="*{isPersistent}"/>
-            <label th:for="${#ids.prev('isPersistent')}">Remember Me</label>
-            </span>
-        </div>
+        <input type="hidden" th:field="*{returnUri}"/>
         <div>
             <button type="submit">Login</button>
         </div>
