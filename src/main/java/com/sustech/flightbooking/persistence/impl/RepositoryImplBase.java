@@ -3,7 +3,7 @@ package com.sustech.flightbooking.persistence.impl;
 import com.sustech.flightbooking.domainmodel.EntityBase;
 import com.sustech.flightbooking.persistence.Repository;
 import org.mongodb.morphia.Datastore;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mongodb.morphia.query.Query;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,14 +19,16 @@ public abstract class RepositoryImplBase<T extends EntityBase> implements Reposi
         this.datastore = datastore;
     }
 
+    protected abstract Class<T> getEntityType();
+
     @Override
     public List<T> findAll() {
-        return null;
+        return datastore.find(getEntityType()).asList();
     }
 
     @Override
     public T findById(UUID id) {
-        return null;
+        return datastore.find(getEntityType()).field("id").equal(id).get();
     }
 
     @Override
@@ -36,6 +38,6 @@ public abstract class RepositoryImplBase<T extends EntityBase> implements Reposi
 
     @Override
     public void delete(T entity) {
-
+        datastore.delete(entity);
     }
 }

@@ -18,6 +18,6 @@ public abstract class UserRepositoryImpl<T extends FlightBookingUser>
 
     @Override
     public T findByUserName(String userName) {
-        return null;
+        return datastore.createQuery(getEntityType()).field("userName").equalIgnoreCase(userName).get();
     }
 }
