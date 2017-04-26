@@ -1,6 +1,6 @@
 package com.sustech.flightbooking.services;
 
-import com.sustech.flightbooking.config.FlightBookingAuthenticationToken;
+import com.sustech.flightbooking.infrastructure.FlightBookingAuthenticationToken;
 import com.sustech.flightbooking.domainmodel.FlightBookingUser;
 
 /**

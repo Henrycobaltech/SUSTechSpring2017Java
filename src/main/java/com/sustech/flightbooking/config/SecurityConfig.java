@@ -1,5 +1,7 @@
 package com.sustech.flightbooking.config;
 
+import com.sustech.flightbooking.infrastructure.FlightBookingAuthenticationProvider;
+import com.sustech.flightbooking.infrastructure.FlightBookingAuthorizationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;

@@ -1,4 +1,4 @@
-package com.sustech.flightbooking.config;
+package com.sustech.flightbooking.infrastructure;
 
 import com.sustech.flightbooking.domainmodel.Administrator;
 import com.sustech.flightbooking.domainmodel.FlightBookingUser;

@@ -1,6 +1,6 @@
 package com.sustech.flightbooking.controllers;
 
-import com.sustech.flightbooking.config.FlightBookingAuthenticationToken;
+import com.sustech.flightbooking.infrastructure.FlightBookingAuthenticationToken;
 import com.sustech.flightbooking.services.IdentityService;
 import com.sustech.flightbooking.viewmodel.LoginViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
