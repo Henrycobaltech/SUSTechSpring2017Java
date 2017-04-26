@@ -19,10 +19,4 @@ public class PassengerServiceImpl implements PassengerService {
         this.passengerRepository = passengerRepository;
     }
 
-
-    @Override
-    public boolean login(String userName, String password) {
-        Passenger passenger = passengerRepository.findByUserName(userName);
-        return passenger != null && passenger.authenticate(password);
-    }
 }

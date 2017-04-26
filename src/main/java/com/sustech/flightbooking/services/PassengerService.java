@@ -5,5 +5,4 @@ package com.sustech.flightbooking.services;
  */
 public interface PassengerService {
 
-    boolean login(String userName, String password);
 }
