@@ -41,6 +41,13 @@ public class IdentityServiceImpl implements IdentityService {
         return null;
     }
 
+    @Override
+    public FlightBookingUser getCurrentUser() {
+        FlightBookingAuthenticationToken token =
+                (FlightBookingAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        return token.getUser();
+    }
+
     private FlightBookingAuthenticationToken loginUser(FlightBookingUser user) {
         FlightBookingAuthenticationToken token = new FlightBookingAuthenticationToken(user);
         token.setAuthenticated(true);
