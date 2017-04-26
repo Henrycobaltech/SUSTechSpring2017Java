@@ -1,11 +1,9 @@
 package com.sustech.flightbooking.controllers;
 
 import com.sustech.flightbooking.config.FlightBookingAuthenticationToken;
-import com.sustech.flightbooking.persistence.PassengerRepository;
 import com.sustech.flightbooking.services.IdentityService;
 import com.sustech.flightbooking.viewmodel.LoginViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -21,14 +19,14 @@ import java.util.Date;
 @RequestMapping("/")
 public class HomeController {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final IdentityService identityService;
+
 
     @Autowired
-    private IdentityService service;
+    public HomeController(IdentityService identityService) {
+        this.identityService = identityService;
+    }
 
-    @Autowired
-    private PassengerRepository repo;
 
     @GetMapping("/")
     public String index(ModelMap modelMap) {
@@ -47,17 +45,17 @@ public class HomeController {
 
     @PostMapping("/login")
     public String login(@ModelAttribute LoginViewModel model) {
-        FlightBookingAuthenticationToken token = service.login(model.getUserName(), model.getPassword());
+        FlightBookingAuthenticationToken token = identityService.login(model.getUserName(), model.getPassword());
         if (token != null) {
             String returnUri = model.getReturnUri();
-            return String.format("redirect:%s", returnUri.isEmpty() ? "/" + token.getRole() : returnUri);
+            return String.format("redirect:%s", returnUri.isEmpty() ? ("/" + token.getRole()) : returnUri);
         }
         return "login";
     }
 
     @GetMapping("/logout")
     public String logout() {
-        service.logout();
+        identityService.logout();
         return "redirect:/";
     }
 }
