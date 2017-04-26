@@ -4,10 +4,15 @@ import com.sustech.flightbooking.infrastructure.FlightBookingAuthenticationToken
 import com.sustech.flightbooking.services.IdentityService;
 import com.sustech.flightbooking.viewmodel.LoginViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.web.WebMvcProperties;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.View;
+import org.springframework.web.servlet.view.RedirectView;
+import org.thymeleaf.spring4.view.ThymeleafView;
 
 import java.util.Date;
 
@@ -44,18 +49,22 @@ public class HomeController {
     }
 
     @PostMapping("/login")
-    public String login(@ModelAttribute LoginViewModel model) {
+    public View login(@ModelAttribute LoginViewModel model) {
         FlightBookingAuthenticationToken token = identityService.login(model.getUserName(), model.getPassword());
         if (token != null) {
             String returnUri = model.getReturnUri();
-            return String.format("redirect:%s", returnUri.isEmpty() ? ("/" + token.getRole()) : returnUri);
+            RedirectView view = new RedirectView(returnUri.isEmpty() ? ("/" + token.getRole().toLowerCase()) : returnUri);
+            view.setExposeModelAttributes(false);
+            return view;
         }
-        return "login";
+        return new ThymeleafView("login");
     }
 
     @GetMapping("/logout")
-    public String logout() {
+    public View logout() {
         identityService.logout();
-        return "redirect:/";
+        RedirectView view = new RedirectView("/");
+        view.setExposeModelAttributes(false);
+        return view;
     }
 }

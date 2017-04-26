@@ -8,6 +8,7 @@ import com.sustech.flightbooking.persistence.AdministratorsRepository;
 import com.sustech.flightbooking.persistence.PassengerRepository;
 import com.sustech.flightbooking.services.IdentityService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -43,9 +44,12 @@ public class IdentityServiceImpl implements IdentityService {
 
     @Override
     public FlightBookingUser getCurrentUser() {
-        FlightBookingAuthenticationToken token =
-                (FlightBookingAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-        return token.getUser();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication instanceof FlightBookingAuthenticationToken) {
+            FlightBookingAuthenticationToken token = (FlightBookingAuthenticationToken) authentication;
+            return token.getUser();
+        }
+        return null;
     }
 
     private FlightBookingAuthenticationToken loginUser(FlightBookingUser user) {

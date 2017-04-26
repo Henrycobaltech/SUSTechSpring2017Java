@@ -4,6 +4,7 @@
 <body>
 <div th:fragment="nav">
     <h2>Flight Booking</h2>
+    <p th:if="${loggedIn}">Hello <span th:text="${currentUserDisplayName}"></span></p>
 </div>
 </body>
 </html>

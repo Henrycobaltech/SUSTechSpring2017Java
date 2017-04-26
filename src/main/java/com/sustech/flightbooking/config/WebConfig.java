@@ -1,18 +1,24 @@
 package com.sustech.flightbooking.config;
 
+import com.sustech.flightbooking.infrastructure.GlobalHandlerInterceptor;
 import nz.net.ultraq.thymeleaf.LayoutDialect;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
+
+import javax.annotation.PostConstruct;
 
 /**
  * Created by Henry on 4/17/2017.
@@ -23,7 +29,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationContextAware {
     private ApplicationContext applicationContext;
 
-    public WebConfig(){
+    public WebConfig() {
         super();
     }
 
@@ -60,15 +66,23 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
     }
 
     @Bean
-    public ThymeleafViewResolver viewResolver(){
+    public ThymeleafViewResolver viewResolver() {
         ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
         viewResolver.setTemplateEngine(templateEngine());
         // NOTE 'order' and 'viewNames' are optional
         viewResolver.setOrder(1);
-        viewResolver.setViewNames(new String[] {".html", ".xhtml"});
+        viewResolver.setViewNames(new String[]{".html", ".xhtml"});
         return viewResolver;
     }
 
+    @Autowired
+    private GlobalHandlerInterceptor interceptor;
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(interceptor);
+        super.addInterceptors(registry);
+    }
 
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
