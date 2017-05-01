@@ -1,6 +1,7 @@
 package com.sustech.flightbooking.config;
 
 import com.sustech.flightbooking.infrastructure.GlobalHandlerInterceptor;
+import com.sustech.flightbooking.misc.StringToUUIDConverter;
 import nz.net.ultraq.thymeleaf.LayoutDialect;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +10,10 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.format.support.FormattingConversionServiceFactoryBean;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import org.thymeleaf.spring4.SpringTemplateEngine;
@@ -80,6 +83,11 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
         registry.addInterceptor(interceptor);
         super.addInterceptors(registry);
     }
+
+    /*@Bean
+    public StringToUUIDConverter stringToUUIDConverter() {
+        return new StringToUUIDConverter();
+    }*/
 
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;

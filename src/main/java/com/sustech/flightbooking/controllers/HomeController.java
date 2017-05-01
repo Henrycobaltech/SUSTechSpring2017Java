@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 import org.thymeleaf.spring4.view.ThymeleafView;
@@ -34,12 +35,13 @@ public class HomeController {
     }
 
     @GetMapping("/login")
-    public String login(Model model,
-                        @RequestParam(value = "returnUri", required = false) String returnUri) {
+    public ModelAndView login(ModelAndView modelAndView,
+                              @RequestParam(value = "returnUri", required = false) String returnUri) {
         LoginViewModel viewModel = new LoginViewModel();
         viewModel.setReturnUri(returnUri);
-        model.addAttribute("model", viewModel);
-        return "login";
+        modelAndView.getModelMap().put("model", viewModel);
+        modelAndView.setViewName("login");
+        return modelAndView;
     }
 
     @PostMapping("/login")
@@ -53,7 +55,7 @@ public class HomeController {
             view.setExposeModelAttributes(false);
             return view;
         }
-        return new ThymeleafView("login");
+        return new ModelAndView("login").getView();
     }
 
     @GetMapping("/logout")
