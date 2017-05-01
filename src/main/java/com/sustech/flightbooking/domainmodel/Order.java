@@ -6,10 +6,6 @@ import org.mongodb.morphia.annotations.Reference;
 import java.sql.Timestamp;
 import java.util.UUID;
 
-/**
- * Created by Henry on 4/17/2017.
- */
-
 @Entity
 public class Order extends EntityBase {
 

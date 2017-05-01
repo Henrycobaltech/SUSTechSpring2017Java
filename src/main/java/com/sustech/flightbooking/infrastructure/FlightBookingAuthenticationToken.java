@@ -7,9 +7,6 @@ import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 
-/**
- * Created by Henry on 4/25/2017.
- */
 public class FlightBookingAuthenticationToken implements Authentication {
 
     private boolean isAuthenticated;

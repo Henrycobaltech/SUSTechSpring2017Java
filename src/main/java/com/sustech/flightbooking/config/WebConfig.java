@@ -20,9 +20,6 @@ import org.thymeleaf.templatemode.TemplateMode;
 
 import javax.annotation.PostConstruct;
 
-/**
- * Created by Henry on 4/17/2017.
- */
 @Configuration
 @EnableWebMvc
 @ComponentScan("com.sustech.*")

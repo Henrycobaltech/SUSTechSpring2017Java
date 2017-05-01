@@ -7,9 +7,6 @@ import org.mongodb.morphia.Datastore;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * Created by Henry on 4/24/2017.
- */
 public abstract class RepositoryImplBase<T extends EntityBase> implements Repository<T> {
 
     protected final Datastore datastore;

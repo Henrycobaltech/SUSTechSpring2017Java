@@ -1,8 +1,5 @@
 package com.sustech.flightbooking.viewmodel;
 
-/**
- * Created by Henry on 4/24/2017.
- */
 public class LoginViewModel {
     private String userName;
     private String password;

@@ -7,9 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/**
- * Created by Henry on 4/25/2017.
- */
 public class FlightBookingAuthorizationFilter implements Filter {
 
     @Override

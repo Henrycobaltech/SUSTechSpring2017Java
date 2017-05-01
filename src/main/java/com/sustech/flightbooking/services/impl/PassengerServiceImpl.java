@@ -6,9 +6,6 @@ import com.sustech.flightbooking.services.PassengerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-/**
- * Created by Henry on 4/24/2017.
- */
 @Service
 public class PassengerServiceImpl implements PassengerService {
 

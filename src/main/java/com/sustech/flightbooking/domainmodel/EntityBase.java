@@ -5,10 +5,6 @@ import org.mongodb.morphia.annotations.Id;
 import java.util.Objects;
 import java.util.UUID;
 
-/**
- * Created by Henry on 4/19/2017.
- */
-
 public abstract class EntityBase {
 
     @Id

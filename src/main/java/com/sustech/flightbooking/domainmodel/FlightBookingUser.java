@@ -6,10 +6,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.UUID;
 
-/**
- * Created by Henry on 4/17/2017.
- */
-
 public abstract class FlightBookingUser extends EntityBase {
     private String userName;
 

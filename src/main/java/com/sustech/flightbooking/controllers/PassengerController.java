@@ -14,10 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.UUID;
 
-/**
- * Created by Henry on 4/23/2017.
- */
-
 @Controller
 @RequestMapping("/passenger")
 public class PassengerController {

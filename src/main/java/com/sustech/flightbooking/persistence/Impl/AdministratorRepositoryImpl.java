@@ -6,10 +6,6 @@ import org.mongodb.morphia.Datastore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-/**
- * Created by Henry on 4/24/2017.
- */
-
 @Repository
 public class AdministratorRepositoryImpl extends UserRepositoryImpl<Administrator>
         implements AdministratorsRepository {
