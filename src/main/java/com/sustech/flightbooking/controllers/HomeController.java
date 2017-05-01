@@ -52,8 +52,10 @@ public class HomeController {
     public View login(@ModelAttribute LoginViewModel model) {
         FlightBookingAuthenticationToken token = identityService.login(model.getUserName(), model.getPassword());
         if (token != null) {
-            String returnUri = model.getReturnUri();
-            RedirectView view = new RedirectView(returnUri.isEmpty() ? ("/" + token.getRole().toLowerCase()) : returnUri);
+            String returnUri = model.getReturnUri().isEmpty() ?
+                    ("/" + (token.getRole().equalsIgnoreCase("passenger") ? "passenger" : "admin"))
+                    : model.getReturnUri();
+            RedirectView view = new RedirectView(returnUri);
             view.setExposeModelAttributes(false);
             return view;
         }
