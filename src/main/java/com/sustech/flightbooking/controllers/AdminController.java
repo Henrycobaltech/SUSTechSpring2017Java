@@ -1,9 +1,12 @@
 package com.sustech.flightbooking.controllers;
 
+import com.sustech.flightbooking.domainmodel.Administrator;
 import com.sustech.flightbooking.domainmodel.Passenger;
+import com.sustech.flightbooking.persistence.AdministratorsRepository;
 import com.sustech.flightbooking.persistence.PassengerRepository;
 import com.sustech.flightbooking.viewmodel.CreateAdminViewModel;
 import com.sustech.flightbooking.viewmodel.CreatePassengerViewModel;
+import com.sustech.flightbooking.viewmodel.EditAdminViewModel;
 import com.sustech.flightbooking.viewmodel.EditPassengerViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,10 +23,12 @@ import java.util.UUID;
 public class AdminController {
 
     private final PassengerRepository passengerRepository;
+    private final AdministratorsRepository adminsRepository;
 
     @Autowired
-    public AdminController(PassengerRepository passengerRepository) {
+    public AdminController(PassengerRepository passengerRepository, AdministratorsRepository adminsRepository) {
         this.passengerRepository = passengerRepository;
+        this.adminsRepository = adminsRepository;
     }
 
 
@@ -78,10 +83,47 @@ public class AdminController {
         return new RedirectView("/manage/passengers");
     }
 
+    @GetMapping("admins")
+    public ModelAndView admins() {
+        ModelAndView modelAndView = new ModelAndView("admin/admins/list");
+        modelAndView.getModel().put("admins", adminsRepository.findAll());
+        return modelAndView;
+    }
+
     @GetMapping("admins/create")
     public ModelAndView createAdmin() {
         ModelAndView modelAndView = new ModelAndView("admin/admins/create");
         modelAndView.getModelMap().put("model", new CreateAdminViewModel());
         return modelAndView;
     }
+
+    @GetMapping("admins/{id}/edit")
+    public ModelAndView editAdmin(@PathVariable UUID id) {
+        ModelAndView modelAndView = new ModelAndView("admin/admins/edit");
+        Administrator admin = adminsRepository.findById(id);
+        if (admin == null) {
+            View view = new ThymeleafView("/error/404.html");
+            modelAndView.setView(view);
+        } else {
+            EditAdminViewModel vm = new EditAdminViewModel();
+            vm.setUserName(admin.getUserName());
+            modelAndView.getModelMap().put("model", vm);
+            modelAndView.getModel().put("adminId", admin.getId());
+        }
+        return modelAndView;
+    }
+
+    @PostMapping("admins/{id}/update")
+    public View updateAdmin(@ModelAttribute EditAdminViewModel model, @PathVariable UUID id) {
+        Administrator admin = adminsRepository.findById(id);
+        if (admin == null) {
+            return new ThymeleafView("/error/404.html");
+        }
+        admin.setUserName(model.getUserName());
+
+        adminsRepository.save(admin);
+        return new RedirectView("/manage/admins");
+    }
+
+
 }

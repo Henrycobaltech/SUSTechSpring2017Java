@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="~{shared/layout}"
+      xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Manage Administrators</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1>All Administrators</h1>
+    <table>
+        <thead>
+        <th>User Name</th>
+        <th>Action</th>
+        </thead>
+        <tbody>
+        <tr th:each="admin:${admins}">
+            <td th:text="${admin.userName}"></td>
+            <td>
+                <a th:href="${'/manage/admins/'+admin.id+'/edit/'}">Edit</a>
+                <!--<a th:href="${'/manage/admins/'+admin.id+'/delete/'}">Delete</a>-->
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
