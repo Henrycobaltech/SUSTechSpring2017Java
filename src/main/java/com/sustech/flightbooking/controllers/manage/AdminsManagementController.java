@@ -26,21 +26,21 @@ public class AdminsManagementController extends ControllerBase {
     }
 
     @GetMapping("")
-    public ModelAndView admins() {
+    public ModelAndView showAll() {
         ModelAndView modelAndView = new ModelAndView("admin/admins/list");
         modelAndView.getModel().put("admins", adminsRepository.findAll());
         return modelAndView;
     }
 
     @GetMapping("create")
-    public ModelAndView createAdmin() {
+    public ModelAndView createPage() {
         ModelAndView modelAndView = new ModelAndView("admin/admins/create");
         modelAndView.getModelMap().put("model", new CreateAdminViewModel());
         return modelAndView;
     }
 
     @GetMapping("{id}/edit")
-    public ModelAndView editAdmin(@PathVariable UUID id) {
+    public ModelAndView editPage(@PathVariable UUID id) {
         ModelAndView modelAndView = new ModelAndView("admin/admins/edit");
         Administrator admin = adminsRepository.findById(id);
         if (admin == null) {
@@ -56,11 +56,8 @@ public class AdminsManagementController extends ControllerBase {
     }
 
     @PostMapping("create")
-    public View createAdmin(@ModelAttribute CreateAdminViewModel model, @PathVariable UUID id) {
-        Administrator admin = adminsRepository.findById(id);
-        if (admin == null) {
-            return new ThymeleafView("/error/404.html");
-        }
+    public View create(@ModelAttribute CreateAdminViewModel model) {
+        Administrator admin = new Administrator(UUID.randomUUID());
         if (!model.getPassword().equals(model.getConfirmPassword())) {
             // password does not match
         }
@@ -72,7 +69,7 @@ public class AdminsManagementController extends ControllerBase {
     }
 
     @PostMapping("{id}/update")
-    public View updateAdmin(@ModelAttribute EditAdminViewModel model, @PathVariable UUID id) {
+    public View update(@ModelAttribute EditAdminViewModel model, @PathVariable UUID id) {
         Administrator admin = adminsRepository.findById(id);
         if (admin == null) {
             return new ThymeleafView("/error/404.html");

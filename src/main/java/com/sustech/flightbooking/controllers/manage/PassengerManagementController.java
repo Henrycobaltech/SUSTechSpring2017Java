@@ -26,21 +26,21 @@ public class PassengerManagementController extends ControllerBase {
     }
 
     @GetMapping("")
-    public ModelAndView passengers() {
+    public ModelAndView showAll() {
         ModelAndView modelAndView = new ModelAndView("admin/passengers/list");
         modelAndView.getModel().put("passengers", passengerRepository.findAll());
         return modelAndView;
     }
 
     @GetMapping("create")
-    public ModelAndView createPassenger() {
+    public ModelAndView createPage() {
         ModelAndView modelAndView = new ModelAndView("admin/passengers/create");
         modelAndView.getModelMap().put("model", new CreatePassengerViewModel());
         return modelAndView;
     }
 
     @GetMapping("{id}/edit")
-    public ModelAndView editPassenger(@PathVariable UUID id) {
+    public ModelAndView editPage(@PathVariable UUID id) {
         ModelAndView modelAndView = new ModelAndView("admin/passengers/edit");
         Passenger passenger = passengerRepository.findById(id);
         if (passenger == null) {
@@ -58,11 +58,9 @@ public class PassengerManagementController extends ControllerBase {
     }
 
     @PostMapping("create")
-    public View createPassenger(@ModelAttribute CreatePassengerViewModel model, @PathVariable UUID id) {
-        Passenger passenger = passengerRepository.findById(id);
-        if (passenger == null) {
-            return new ThymeleafView("/error/404.html");
-        }
+    public View create(@ModelAttribute CreatePassengerViewModel model) {
+        Passenger passenger = new Passenger(UUID.randomUUID());
+
         passenger.setUserName(model.getUserName());
         passenger.setDisplayName(model.getDisplayName());
         passenger.setIdentityCardNumber(model.getIdentityNumber());
@@ -72,7 +70,7 @@ public class PassengerManagementController extends ControllerBase {
     }
 
     @PostMapping("{id}/update")
-    public View updatePassenger(@ModelAttribute CreatePassengerViewModel model, @PathVariable UUID id) {
+    public View update(@ModelAttribute CreatePassengerViewModel model, @PathVariable UUID id) {
         Passenger passenger = passengerRepository.findById(id);
         if (passenger == null) {
             return new ThymeleafView("/error/404.html");
