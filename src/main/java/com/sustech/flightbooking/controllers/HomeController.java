@@ -63,4 +63,9 @@ public class HomeController extends ControllerBase {
         identityService.logout();
         return redirect("/");
     }
+
+    @GetMapping("/manage")
+    public ModelAndView index() {
+        return new ModelAndView("admin/index");
+    }
 }
