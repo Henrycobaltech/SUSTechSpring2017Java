@@ -65,8 +65,8 @@ public class AdminController extends ControllerBase {
         return modelAndView;
     }
 
-    @PostMapping("passengers/{id}/update")
-    public View updatePassenger(@ModelAttribute EditPassengerViewModel model, @PathVariable UUID id) {
+    @PostMapping("passengers/create")
+    public View createPassenger(@ModelAttribute CreatePassengerViewModel model, @PathVariable UUID id) {
         Passenger passenger = passengerRepository.findById(id);
         if (passenger == null) {
             return new ThymeleafView("/error/404.html");
@@ -74,6 +74,24 @@ public class AdminController extends ControllerBase {
         passenger.setUserName(model.getUserName());
         passenger.setDisplayName(model.getDisplayName());
         passenger.setIdentityCardNumber(model.getIdentityNumber());
+
+        passengerRepository.save(passenger);
+        return redirect("/manage/passengers");
+    }
+
+    @PostMapping("passengers/{id}/update")
+    public View updatePassenger(@ModelAttribute CreatePassengerViewModel model, @PathVariable UUID id) {
+        Passenger passenger = passengerRepository.findById(id);
+        if (passenger == null) {
+            return new ThymeleafView("/error/404.html");
+        }
+        if (!model.getPassword().equals(model.getConfirmPassword())) {
+            // password does not match
+        }
+        passenger.setUserName(model.getUserName());
+        passenger.setDisplayName(model.getDisplayName());
+        passenger.setIdentityCardNumber(model.getIdentityNumber());
+        passenger.setPassword(model.getPassword());
 
         passengerRepository.save(passenger);
         return redirect("/manage/passengers");
@@ -107,6 +125,22 @@ public class AdminController extends ControllerBase {
             modelAndView.getModel().put("adminId", admin.getId());
         }
         return modelAndView;
+    }
+
+    @PostMapping("admins/{id}/update")
+    public View createAdmin(@ModelAttribute CreateAdminViewModel model, @PathVariable UUID id) {
+        Administrator admin = adminsRepository.findById(id);
+        if (admin == null) {
+            return new ThymeleafView("/error/404.html");
+        }
+        if (!model.getPassword().equals(model.getConfirmPassword())) {
+            // password does not match
+        }
+        admin.setUserName(model.getUserName());
+        admin.setPassword(model.getPassword());
+
+        adminsRepository.save(admin);
+        return redirect("/manage/admins");
     }
 
     @PostMapping("admins/{id}/update")
