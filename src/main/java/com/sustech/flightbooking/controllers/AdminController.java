@@ -13,14 +13,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
-import org.springframework.web.servlet.view.RedirectView;
 import org.thymeleaf.spring4.view.ThymeleafView;
 
 import java.util.UUID;
 
 @Controller
 @RequestMapping("/manage")
-public class AdminController {
+public class AdminController extends ControllerBase {
 
     private final PassengerRepository passengerRepository;
     private final AdministratorsRepository adminsRepository;
@@ -80,7 +79,7 @@ public class AdminController {
         passenger.setIdentityCardNumber(model.getIdentityNumber());
 
         passengerRepository.save(passenger);
-        return new RedirectView("/manage/passengers");
+        return redirect("/manage/passengers");
     }
 
     @GetMapping("admins")
@@ -122,7 +121,7 @@ public class AdminController {
         admin.setUserName(model.getUserName());
 
         adminsRepository.save(admin);
-        return new RedirectView("/manage/admins");
+        return redirect("/manage/admins");
     }
 
 

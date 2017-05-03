@@ -4,6 +4,7 @@ import com.sustech.flightbooking.infrastructure.FlightBookingAuthenticationToken
 import com.sustech.flightbooking.services.IdentityService;
 import com.sustech.flightbooking.viewmodel.LoginViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.util.RedirectUrlBuilder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -17,7 +18,7 @@ import java.util.Date;
 
 @Controller
 @RequestMapping("/")
-public class HomeController {
+public class HomeController extends ControllerBase {
 
     private final IdentityService identityService;
 
@@ -51,8 +52,7 @@ public class HomeController {
             String returnUri = model.getReturnUri().isEmpty() ?
                     ("/" + (token.getRole().equalsIgnoreCase("passenger") ? "passenger" : "manage"))
                     : model.getReturnUri();
-            RedirectView view = new RedirectView(returnUri);
-            view.setExposeModelAttributes(false);
+            RedirectView view = redirect(returnUri);
             return view;
         }
         return new ModelAndView("login").getView();
@@ -61,8 +61,6 @@ public class HomeController {
     @GetMapping("/logout")
     public View logout() {
         identityService.logout();
-        RedirectView view = new RedirectView("/");
-        view.setExposeModelAttributes(false);
-        return view;
+        return redirect("/");
     }
 }
