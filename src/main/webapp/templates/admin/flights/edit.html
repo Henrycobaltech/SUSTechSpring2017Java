@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="~{shared/layout}"
+      xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Edit Administrator</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1>Edit Administrator</h1>
+    <form action="#" th:action="@{'/manage/admins/'+${adminId}+'/update'}" th:object="${model}" method="post">
+        <div>
+            <label th:for="${#ids.next('userName')}">User Name</label>
+            <input type="text" th:field="*{userName}"/>
+        </div>
+        <div>
+            <button type="submit">Save</button>
+        </div>
+    </form>
+</div>
+</body>
+</html>

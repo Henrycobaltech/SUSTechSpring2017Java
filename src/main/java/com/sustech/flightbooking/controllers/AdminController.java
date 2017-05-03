@@ -4,10 +4,7 @@ import com.sustech.flightbooking.domainmodel.Administrator;
 import com.sustech.flightbooking.domainmodel.Passenger;
 import com.sustech.flightbooking.persistence.AdministratorsRepository;
 import com.sustech.flightbooking.persistence.PassengerRepository;
-import com.sustech.flightbooking.viewmodel.CreateAdminViewModel;
-import com.sustech.flightbooking.viewmodel.CreatePassengerViewModel;
-import com.sustech.flightbooking.viewmodel.EditAdminViewModel;
-import com.sustech.flightbooking.viewmodel.EditPassengerViewModel;
+import com.sustech.flightbooking.viewmodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -124,5 +121,10 @@ public class AdminController extends ControllerBase {
         return redirect("/manage/admins");
     }
 
-
+    @GetMapping("flights/create")
+    public ModelAndView createFlight() {
+        ModelAndView modelAndView = new ModelAndView("admin/flights/create");
+        modelAndView.getModelMap().put("model", new CreateFlightViewModel());
+        return modelAndView;
+    }
 }
