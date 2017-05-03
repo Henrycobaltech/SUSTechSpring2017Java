@@ -3,6 +3,8 @@ package com.sustech.flightbooking.domainmodel;
 import org.mongodb.morphia.annotations.Entity;
 
 import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -12,6 +14,8 @@ public class Flight extends EntityBase {
     private LocalDateTime departureTime;
     private LocalDateTime arrivalTime;
     private int capacity;
+    private boolean isPublished;
+    private boolean isDeleted;
 
     public Flight(UUID id, double price, LocalDateTime departureTime, LocalDateTime arrivalTime, int capacity) {
         super(id);
@@ -46,5 +50,14 @@ public class Flight extends EntityBase {
 
     public void setCapacity(int capacity) {
         this.capacity = capacity;
+    }
+
+
+    public boolean isPublished() {
+        return isPublished;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
     }
 }
