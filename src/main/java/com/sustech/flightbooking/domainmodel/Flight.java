@@ -10,15 +10,19 @@ import java.util.UUID;
 @Entity
 public class Flight extends EntityBase {
 
+    private String flightId;
     private double price;
     private LocalDateTime departureTime;
     private LocalDateTime arrivalTime;
+    private String origin;
+    private String destination;
     private int capacity;
     private boolean isPublished;
     private boolean isDeleted;
 
-    public Flight(UUID id, double price, LocalDateTime departureTime, LocalDateTime arrivalTime, int capacity) {
+    public Flight(UUID id, String flightId, double price, LocalDateTime departureTime, LocalDateTime arrivalTime, int capacity) {
         super(id);
+        this.flightId = flightId;
         this.setPrice(price);
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
@@ -59,5 +63,21 @@ public class Flight extends EntityBase {
 
     public boolean isDeleted() {
         return isDeleted;
+    }
+
+    public String getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(String origin) {
+        this.origin = origin;
+    }
+
+    public String getDestination() {
+        return destination;
+    }
+
+    public void setDestination(String destination) {
+        this.destination = destination;
     }
 }
