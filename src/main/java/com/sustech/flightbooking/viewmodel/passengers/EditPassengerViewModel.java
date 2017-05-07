@@ -1,4 +1,4 @@
-package com.sustech.flightbooking.viewmodel;
+package com.sustech.flightbooking.viewmodel.passengers;
 
 public class EditPassengerViewModel {
     private String userName;

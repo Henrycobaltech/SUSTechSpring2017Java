@@ -1,9 +1,11 @@
-package com.sustech.flightbooking.viewmodel;
+package com.sustech.flightbooking.viewmodel.passengers;
 
-public class CreateAdminViewModel {
+public class CreatePassengerViewModel {
     private String userName;
     private String password;
     private String confirmPassword;
+    private String displayName;
+    private String identityNumber;
 
 
     public String getUserName() {
@@ -28,5 +30,21 @@ public class CreateAdminViewModel {
 
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getIdentityNumber() {
+        return identityNumber;
+    }
+
+    public void setIdentityNumber(String identityNumber) {
+        this.identityNumber = identityNumber;
     }
 }
