@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class FlightServiceImpl implements FlightService {
@@ -27,9 +29,16 @@ public class FlightServiceImpl implements FlightService {
             return FlightStatus.UNPUBLISHED;
         if (LocalDateTime.now().plusHours(2).isAfter(flight.getDepartureTime()))
             return FlightStatus.TERMINATE;
-        if (orderRepository.countByFlight(flight) > flight.getCapacity())
+        if (orderRepository.countByFlight(flight) >= flight.getCapacity())
             return FlightStatus.FULL;
         else
             return FlightStatus.AVAILABLE;
+    }
+
+    @Override
+    public List<String> validate(Flight flight) {
+        List<String> errorMessages = new ArrayList<>();
+
+        return errorMessages;
     }
 }

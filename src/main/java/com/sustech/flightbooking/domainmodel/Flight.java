@@ -3,8 +3,6 @@ package com.sustech.flightbooking.domainmodel;
 import org.mongodb.morphia.annotations.Entity;
 
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -20,9 +18,15 @@ public class Flight extends EntityBase {
     private boolean isPublished;
     private boolean isDeleted;
 
-    public Flight(UUID id, String flightId, double price, LocalDateTime departureTime, LocalDateTime arrivalTime, int capacity) {
+    public Flight(UUID id, String flightId, double price,
+                  String origin, String destination,
+                  LocalDateTime departureTime, LocalDateTime arrivalTime,
+                  int capacity) {
         super(id);
         this.flightId = flightId;
+        this.price = price;
+        this.origin = origin;
+        this.destination = destination;
         this.setPrice(price);
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
@@ -56,6 +60,9 @@ public class Flight extends EntityBase {
         this.capacity = capacity;
     }
 
+    public void publish() {
+        this.isPublished = true;
+    }
 
     public boolean isPublished() {
         return isPublished;

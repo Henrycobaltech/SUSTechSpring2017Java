@@ -8,6 +8,7 @@ public class CreateFlightViewModel {
     private LocalDateTime arrivalTime;
     private String origin;
     private String destination;
+    private double price;
     private int capacity;
     private boolean publishNow;
 
@@ -65,5 +66,13 @@ public class CreateFlightViewModel {
 
     public void setPublishNow(boolean publishNow) {
         this.publishNow = publishNow;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 }
