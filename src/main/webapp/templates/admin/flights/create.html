@@ -14,12 +14,8 @@
             <input type="text" th:field="*{flightId}"/>
         </div>
         <div>
-            <label th:for="${#ids.next('departureTime')}">Departure Time</label>
-            <input type="datetime-local" th:field="*{departureTime}"/>
-        </div>
-        <div>
-            <label th:for="${#ids.next('arrivalTime')}">Arrival Time</label>
-            <input type="datetime-local" th:field="*{arrivalTime}"/>
+            <label th:for="${#ids.next('price')}">Price</label>
+            <input type="number" th:field="*{price}"/>
         </div>
         <div>
             <label th:for="${#ids.next('origin')}">From</label>
@@ -28,6 +24,14 @@
         <div>
             <label th:for="${#ids.next('destination')}">To</label>
             <input type="text" th:field="*{destination}"/>
+        </div>
+        <div>
+            <label th:for="${#ids.next('departureTime')}">Departure Time</label>
+            <input type="datetime-local" th:field="*{departureTime}"/>
+        </div>
+        <div>
+            <label th:for="${#ids.next('arrivalTime')}">Arrival Time</label>
+            <input type="datetime-local" th:field="*{arrivalTime}"/>
         </div>
         <div>
             <label th:for="${#ids.next('capacity')}">Capacity</label>

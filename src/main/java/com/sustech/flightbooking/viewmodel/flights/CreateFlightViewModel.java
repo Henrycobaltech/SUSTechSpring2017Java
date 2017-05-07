@@ -1,10 +1,16 @@
-package com.sustech.flightbooking.viewmodel;
+package com.sustech.flightbooking.viewmodel.flights;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
 public class CreateFlightViewModel {
     private String flightId;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime departureTime;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime arrivalTime;
     private String origin;
     private String destination;

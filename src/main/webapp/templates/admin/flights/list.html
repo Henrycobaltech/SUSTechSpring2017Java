@@ -3,22 +3,40 @@
       xmlns:th="http://www.w3.org/1999/xhtml"
       xmlns:layout="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Manage Administrators</title>
+    <title>Manage Flights</title>
 </head>
 <body>
 <div layout:fragment="content">
-    <h1>All Administrators</h1>
+    <h1>All Flights</h1>
     <table>
         <thead>
-        <th>User Name</th>
+        <th>Flight ID</th>
+        <th>From</th>
+        <th>To</th>
+        <th>Price</th>
+        <th>Departure Time</th>
+        <th>Arrival Time</th>
+        <th>Capacity</th>
+        <th>Order Count</th>
+        <th>Status</th>
+
         <th>Action</th>
         </thead>
         <tbody>
-        <tr th:each="admin:${admins}">
-            <td th:text="${admin.userName}"></td>
+        <tr th:each="flight:${flights}">
+            <td th:text="${flight.flightId}"></td>
+            <td th:text="${flight.origin}"></td>
+            <td th:text="${flight.destination}"></td>
+            <td th:text="${flight.price}"></td>
+            <td th:text="${flight.departureTime}"></td>
+            <td th:text="${flight.arrivalTime}"></td>
+            <td th:text="${flight.capacity}"></td>
+            <td th:text="${flight.orderCount}"></td>
+            <td th:text="${flight.status}"></td>
+
             <td>
-                <a th:href="${'/manage/admins/'+admin.id+'/edit/'}">Edit</a>
-                <!--<a th:href="${'/manage/admins/'+admin.id+'/delete/'}">Delete</a>-->
+                <a th:href="${'/manage/flights/'+flight.id+'/edit/'}">Edit</a>
+                <a th:href="${'/manage/flights/'+flight.id+'/delete/'}">Delete</a>
             </td>
         </tr>
         </tbody>

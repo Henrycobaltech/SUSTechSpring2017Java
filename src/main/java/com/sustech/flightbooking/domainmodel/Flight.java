@@ -87,4 +87,12 @@ public class Flight extends EntityBase {
     public void setDestination(String destination) {
         this.destination = destination;
     }
+
+    public String getFlightId() {
+        return flightId;
+    }
+
+    public void setFlightId(String flightId) {
+        this.flightId = flightId;
+    }
 }

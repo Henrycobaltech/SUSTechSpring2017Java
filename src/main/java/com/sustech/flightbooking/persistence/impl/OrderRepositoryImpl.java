@@ -7,6 +7,9 @@ import org.mongodb.morphia.Datastore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Repository
 public class OrderRepositoryImpl extends RepositoryImplBase<Order> implements OrderRepository {
 
@@ -16,10 +19,10 @@ public class OrderRepositoryImpl extends RepositoryImplBase<Order> implements Or
     }
 
     @Override
-    public int countByFlight(Flight flight) {
-        return (int) datastore.createQuery(Order.class).asList().stream()
+    public List<Order> findByFlight(Flight flight) {
+        return datastore.createQuery(Order.class).asList().stream()
                 .filter(o -> o.getFlight().equals(flight))
-                .count();
+                .collect(Collectors.toList());
     }
 
     @Override
