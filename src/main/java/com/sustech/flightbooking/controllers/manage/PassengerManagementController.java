@@ -58,7 +58,7 @@ public class PassengerManagementController extends ControllerBase {
     }
 
     @PostMapping("create")
-    public View create(@ModelAttribute CreatePassengerViewModel model) {
+    public ModelAndView create(@ModelAttribute CreatePassengerViewModel model) {
         Passenger passenger = new Passenger(UUID.randomUUID());
 
         passenger.setUserName(model.getUserName());
@@ -70,10 +70,10 @@ public class PassengerManagementController extends ControllerBase {
     }
 
     @PostMapping("{id}/update")
-    public View update(@ModelAttribute CreatePassengerViewModel model, @PathVariable UUID id) {
+    public ModelAndView update(@ModelAttribute CreatePassengerViewModel model, @PathVariable UUID id) {
         Passenger passenger = passengerRepository.findById(id);
         if (passenger == null) {
-            return new ThymeleafView("/error/404.html");
+            return notFound();
         }
         if (!model.getPassword().equals(model.getConfirmPassword())) {
             // password does not match

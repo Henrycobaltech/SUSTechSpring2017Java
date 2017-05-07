@@ -14,7 +14,7 @@ public class FlightsManagementController extends ControllerBase {
 
     @GetMapping("create")
     public ModelAndView createFlight() {
-        ModelAndView modelAndView = new ModelAndView("admin/flights/create");
+        ModelAndView modelAndView = page("admin/flights/create");
         modelAndView.getModelMap().put("model", new CreateFlightViewModel());
         return modelAndView;
     }

@@ -44,8 +44,7 @@ public class AdminsManagementController extends ControllerBase {
         ModelAndView modelAndView = new ModelAndView("admin/admins/edit");
         Administrator admin = adminsRepository.findById(id);
         if (admin == null) {
-            View view = new ThymeleafView("/error/404.html");
-            modelAndView.setView(view);
+            return notFound();
         } else {
             EditAdminViewModel vm = new EditAdminViewModel();
             vm.setUserName(admin.getUserName());
@@ -56,7 +55,7 @@ public class AdminsManagementController extends ControllerBase {
     }
 
     @PostMapping("create")
-    public View create(@ModelAttribute CreateAdminViewModel model) {
+    public ModelAndView create(@ModelAttribute CreateAdminViewModel model) {
         Administrator admin = new Administrator(UUID.randomUUID());
         if (!model.getPassword().equals(model.getConfirmPassword())) {
             // password does not match
@@ -69,10 +68,10 @@ public class AdminsManagementController extends ControllerBase {
     }
 
     @PostMapping("{id}/update")
-    public View update(@ModelAttribute EditAdminViewModel model, @PathVariable UUID id) {
+    public ModelAndView update(@ModelAttribute EditAdminViewModel model, @PathVariable UUID id) {
         Administrator admin = adminsRepository.findById(id);
         if (admin == null) {
-            return new ThymeleafView("/error/404.html");
+            return notFound();
         }
         admin.setUserName(model.getUserName());
 
