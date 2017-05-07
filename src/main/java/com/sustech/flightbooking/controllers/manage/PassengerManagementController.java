@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.View;
-import org.thymeleaf.spring4.view.ThymeleafView;
 
 import java.util.UUID;
 
@@ -27,34 +25,33 @@ public class PassengerManagementController extends ControllerBase {
 
     @GetMapping("")
     public ModelAndView showAll() {
-        ModelAndView modelAndView = new ModelAndView("admin/passengers/list");
-        modelAndView.getModel().put("passengers", passengerRepository.findAll());
+        ModelAndView modelAndView = page("admin/passengers/list");
+        modelAndView.getModelMap().put("passengers", passengerRepository.findAll());
         return modelAndView;
     }
 
     @GetMapping("create")
     public ModelAndView createPage() {
-        ModelAndView modelAndView = new ModelAndView("admin/passengers/create");
-        modelAndView.getModelMap().put("model", new CreatePassengerViewModel());
-        return modelAndView;
+        return pageWithViewModel("admin/passengers/create",
+                new CreatePassengerViewModel());
     }
 
     @GetMapping("{id}/edit")
     public ModelAndView editPage(@PathVariable UUID id) {
-        ModelAndView modelAndView = new ModelAndView("admin/passengers/edit");
         Passenger passenger = passengerRepository.findById(id);
         if (passenger == null) {
-            View view = new ThymeleafView("/error/404.html");
-            modelAndView.setView(view);
+            return notFound();
         } else {
             EditPassengerViewModel vm = new EditPassengerViewModel();
+
             vm.setDisplayName(passenger.getDisplayName());
             vm.setUserName(passenger.getUserName());
             vm.setIdentityNumber(passenger.getIdentityCardNumber());
-            modelAndView.getModelMap().put("model", vm);
-            modelAndView.getModel().put("passengerId", passenger.getId());
+
+            ModelAndView modelAndView = pageWithViewModel("admin/passengers/edit", vm);
+            modelAndView.getModelMap().put("passengerId", passenger.getId());
+            return modelAndView;
         }
-        return modelAndView;
     }
 
     @PostMapping("create")

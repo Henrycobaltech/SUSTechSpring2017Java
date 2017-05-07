@@ -37,4 +37,10 @@ public class ControllerBase {
         modelAndView.setStatus(HttpStatus.BAD_REQUEST);
         return modelAndView;
     }
+
+    public ModelAndView pageWithViewModel(String viewName, Object viewModel) {
+        ModelAndView modelAndView = page(viewName);
+        modelAndView.getModelMap().put("model", viewModel);
+        return modelAndView;
+    }
 }

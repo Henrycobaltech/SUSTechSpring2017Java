@@ -34,24 +34,23 @@ public class AdminsManagementController extends ControllerBase {
 
     @GetMapping("create")
     public ModelAndView createPage() {
-        ModelAndView modelAndView = new ModelAndView("admin/admins/create");
-        modelAndView.getModelMap().put("model", new CreateAdminViewModel());
-        return modelAndView;
+        return pageWithViewModel("admin/admins/create",
+                new CreateAdminViewModel());
     }
 
     @GetMapping("{id}/edit")
     public ModelAndView editPage(@PathVariable UUID id) {
-        ModelAndView modelAndView = new ModelAndView("admin/admins/edit");
         Administrator admin = adminsRepository.findById(id);
         if (admin == null) {
             return notFound();
         } else {
             EditAdminViewModel vm = new EditAdminViewModel();
             vm.setUserName(admin.getUserName());
-            modelAndView.getModelMap().put("model", vm);
+
+            ModelAndView modelAndView = pageWithViewModel("admin/admins/edit", vm);
             modelAndView.getModel().put("adminId", admin.getId());
+            return modelAndView;
         }
-        return modelAndView;
     }
 
     @PostMapping("create")
