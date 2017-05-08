@@ -6,6 +6,7 @@ import com.sustech.flightbooking.domainmodel.Flight;
 import com.sustech.flightbooking.domainmodel.FlightStatus;
 import com.sustech.flightbooking.persistence.FlightRepository;
 import com.sustech.flightbooking.services.FlightService;
+import com.sustech.flightbooking.viewmodel.OrderAdminViewModel;
 import com.sustech.flightbooking.viewmodel.flights.CreateFlightViewModel;
 import com.sustech.flightbooking.viewmodel.flights.FlightDetailViewModel;
 import com.sustech.flightbooking.viewmodel.flights.FlightViewModel;
@@ -96,7 +97,24 @@ public class FlightsManagementController extends ControllerBase {
         if (flight == null) {
             return notFound();
         }
-        return pageWithViewModel("admin/flights/detail", new FlightDetailViewModel());
+        FlightDetailViewModel vm = new FlightDetailViewModel();
+
+        vm.setFlightId(flight.getFlightNumber());
+        vm.setPrice(flight.getPrice());
+        vm.setOrigin(flight.getOrigin());
+        vm.setDestination(flight.getDestination());
+        vm.setDepartureTime(flight.getDepartureTime());
+        vm.setArrivalTime(flight.getArrivalTime());
+        vm.setCapacity(flight.getCapacity());
+        vm.setStatus(flightService.getStatus(flight));
+        vm.setOrderCount(flightService.getOrders(flight).size());
+
+        List<OrderAdminViewModel> orders = flightService.getOrders(flight).stream()
+                .map(OrderAdminViewModel::createFromDomainModel)
+                .collect(Collectors.toList());
+        vm.setOrders(orders);
+
+        return pageWithViewModel("admin/flights/detail", vm);
     }
 
 

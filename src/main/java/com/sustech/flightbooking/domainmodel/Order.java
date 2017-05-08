@@ -4,6 +4,7 @@ import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Reference;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -14,11 +15,15 @@ public class Order extends EntityBase {
 
     @Reference
     private Flight flight;
-    private Timestamp createdTime;
+    private LocalDateTime createdTime;
     private OrderStatus status;
 
-    public Order(UUID id) {
+    @Reference
+    private Passenger passenger;
+
+    public Order(UUID id, Passenger passenger) {
         super(id);
+        this.passenger = passenger;
     }
 
     public Order() {
@@ -37,7 +42,11 @@ public class Order extends EntityBase {
         return status;
     }
 
-    public Timestamp getCreatedTime() {
+    public LocalDateTime getCreatedTime() {
         return createdTime;
+    }
+
+    public Passenger getPassenger() {
+        return passenger;
     }
 }
