@@ -28,10 +28,10 @@ public class FlightServiceImpl implements FlightService {
     public FlightStatus getStatus(Flight flight) {
         if (flight.isDeleted())
             return FlightStatus.DELETED;
-        if (!flight.isPublished())
-            return FlightStatus.UNPUBLISHED;
         if (LocalDateTime.now().plusHours(2).isAfter(flight.getDepartureTime()))
             return FlightStatus.TERMINATE;
+        if (!flight.isPublished())
+            return FlightStatus.UNPUBLISHED;
         if (orderRepository.findByFlight(flight).size() >= flight.getCapacity())
             return FlightStatus.FULL;
         else
