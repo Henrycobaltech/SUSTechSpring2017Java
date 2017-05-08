@@ -95,4 +95,8 @@ public class Flight extends EntityBase {
     public void setFlightId(String flightId) {
         this.flightId = flightId;
     }
+
+    public void delete() {
+        this.isDeleted = true;
+    }
 }

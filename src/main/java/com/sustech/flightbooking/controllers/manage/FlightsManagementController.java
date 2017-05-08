@@ -3,16 +3,15 @@ package com.sustech.flightbooking.controllers.manage;
 
 import com.sustech.flightbooking.controllers.ControllerBase;
 import com.sustech.flightbooking.domainmodel.Flight;
+import com.sustech.flightbooking.domainmodel.FlightStatus;
 import com.sustech.flightbooking.persistence.FlightRepository;
 import com.sustech.flightbooking.services.FlightService;
 import com.sustech.flightbooking.viewmodel.flights.CreateFlightViewModel;
+import com.sustech.flightbooking.viewmodel.flights.FlightDetailViewModel;
 import com.sustech.flightbooking.viewmodel.flights.FlightViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDateTime;
@@ -38,6 +37,7 @@ public class FlightsManagementController extends ControllerBase {
     public ModelAndView showAll() {
         ModelAndView modelAndView = page("admin/flights/list");
         List<FlightViewModel> flightViewModels = flightRepository.findAll().stream()
+                .filter(flight -> !flight.isDeleted())
                 .map(flight -> {
                     FlightViewModel vm = new FlightViewModel();
 
@@ -86,5 +86,47 @@ public class FlightsManagementController extends ControllerBase {
         }
         flightRepository.save(flight);
         return redirect("/manage/flights");
+    }
+
+
+    //not implemented yet
+    @GetMapping("{id}")
+    public ModelAndView detail(@PathVariable UUID id) {
+        Flight flight = flightRepository.findById(id);
+        if (flight == null) {
+            return notFound();
+        }
+        return pageWithViewModel("admin/flights/detail", new FlightDetailViewModel());
+    }
+
+
+    @GetMapping("{id}/publish")
+    public ModelAndView publish(@PathVariable UUID id) {
+        Flight flight = flightRepository.findById(id);
+        if (flight == null) {
+            return notFound();
+        }
+        if (flightService.getStatus(flight) != FlightStatus.UNPUBLISHED) {
+            return badRequest("Current state does not allow publishing.");
+        }
+        flight.publish();
+        flightRepository.save(flight);
+        return redirect(String.format("manage/flights/%s", id));
+    }
+
+    @GetMapping("{id}/delete")
+    public ModelAndView delete(@PathVariable UUID id) {
+        Flight flight = flightRepository.findById(id);
+        if (flight == null) {
+            return notFound();
+        }
+        FlightStatus status = flightService.getStatus(flight);
+        if (status != FlightStatus.UNPUBLISHED
+                && status != FlightStatus.TERMINATE) {
+            return badRequest("Current state does not allow deleting.");
+        }
+        flight.delete();
+        flightRepository.save(flight);
+        return redirect("manage/flights");
     }
 }

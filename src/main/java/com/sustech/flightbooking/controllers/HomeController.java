@@ -27,13 +27,10 @@ public class HomeController extends ControllerBase {
     }
 
     @GetMapping("/login")
-    public ModelAndView login(ModelAndView modelAndView,
-                              @RequestParam(value = "returnUri", required = false) String returnUri) {
+    public ModelAndView loginPage(@RequestParam(value = "returnUri", required = false) String returnUri) {
         LoginViewModel viewModel = new LoginViewModel();
         viewModel.setReturnUri(returnUri);
-        modelAndView.getModelMap().put("model", viewModel);
-        modelAndView.setViewName("login");
-        return modelAndView;
+        return pageWithViewModel("login", viewModel);
     }
 
     @PostMapping("/login")
@@ -45,7 +42,9 @@ public class HomeController extends ControllerBase {
                     : model.getReturnUri();
             return redirect(returnUri);
         }
-        return page("login");
+        //clear password
+        model.setPassword("");
+        return pageWithViewModel("login", model);
     }
 
     @GetMapping("/logout")
