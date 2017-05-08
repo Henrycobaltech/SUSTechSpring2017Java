@@ -42,7 +42,7 @@ public class FlightsManagementController extends ControllerBase {
                     FlightViewModel vm = new FlightViewModel();
 
                     vm.setId(flight.getId());
-                    vm.setFlightId(flight.getFlightId());
+                    vm.setFlightId(flight.getFlightNumber());
                     vm.setPrice(flight.getPrice());
                     vm.setOrigin(flight.getOrigin());
                     vm.setDestination(flight.getDestination());

@@ -8,7 +8,7 @@ import java.util.UUID;
 @Entity
 public class Flight extends EntityBase {
 
-    private String flightId;
+    private String flightNumber;
     private double price;
     private LocalDateTime departureTime;
     private LocalDateTime arrivalTime;
@@ -18,12 +18,12 @@ public class Flight extends EntityBase {
     private boolean isPublished;
     private boolean isDeleted;
 
-    public Flight(UUID id, String flightId, double price,
+    public Flight(UUID id, String flightNumber, double price,
                   String origin, String destination,
                   LocalDateTime departureTime, LocalDateTime arrivalTime,
                   int capacity) {
         super(id);
-        this.flightId = flightId;
+        this.flightNumber = flightNumber;
         this.price = price;
         this.origin = origin;
         this.destination = destination;
@@ -88,12 +88,12 @@ public class Flight extends EntityBase {
         this.destination = destination;
     }
 
-    public String getFlightId() {
-        return flightId;
+    public String getFlightNumber() {
+        return flightNumber;
     }
 
-    public void setFlightId(String flightId) {
-        this.flightId = flightId;
+    public void setFlightNumber(String flightNumber) {
+        this.flightNumber = flightNumber;
     }
 
     public void delete() {
