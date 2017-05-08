@@ -1,50 +1,48 @@
 <!DOCTYPE html>
-<html lang="en" layout:decorate="~{shared/layout}"
+<html lang="en" layout:decorate="~{shared/create-edit}"
       xmlns:th="http://www.w3.org/1999/xhtml"
       xmlns:layout="http://www.w3.org/1999/xhtml">
 <head>
     <title>Create Flight</title>
 </head>
 <body>
-<div layout:fragment="content">
-    <h1>New Flight</h1>
-    <form action="#" th:action="@{/manage/flights/create}" th:object="${model}" method="post">
-        <div>
-            <label th:for="${#ids.next('flightId')}">Flight ID</label>
-            <input type="text" th:field="*{flightId}"/>
-        </div>
-        <div>
-            <label th:for="${#ids.next('price')}">Price</label>
-            <input type="number" th:field="*{price}"/>
-        </div>
-        <div>
-            <label th:for="${#ids.next('origin')}">From</label>
-            <input type="text" th:field="*{origin}"/>
-        </div>
-        <div>
-            <label th:for="${#ids.next('destination')}">To</label>
-            <input type="text" th:field="*{destination}"/>
-        </div>
-        <div>
-            <label th:for="${#ids.next('departureTime')}">Departure Time</label>
-            <input type="datetime-local" th:field="*{departureTime}"/>
-        </div>
-        <div>
-            <label th:for="${#ids.next('arrivalTime')}">Arrival Time</label>
-            <input type="datetime-local" th:field="*{arrivalTime}"/>
-        </div>
-        <div>
-            <label th:for="${#ids.next('capacity')}">Capacity</label>
-            <input type="number" th:field="*{capacity}"/>
-        </div>
-        <div>
-            <input type="checkbox" th:field="*{publishNow}"/>
-            <label th:for="${#ids.prev('publishNow')}">Publish Now</label>
-        </div>
-        <div>
-            <button type="submit">Create</button>
-        </div>
-    </form>
-</div>
+
+<h1 layout:fragment="header">New Flight</h1>
+<form layout:fragment="form" class="col-md-6" action="#" th:action="@{/manage/flights/create}" th:object="${model}"
+      method="post">
+    <div class="form-group">
+        <label th:for="${#ids.next('flightId')}">Flight ID</label>
+        <input class="form-control" type="text" th:field="*{flightId}"/>
+    </div>
+    <div class="form-group">
+        <label th:for="${#ids.next('price')}">Price</label>
+        <input class="form-control" type="number" th:field="*{price}"/>
+    </div>
+    <div class="form-group">
+        <label th:for="${#ids.next('origin')}">From</label>
+        <input class="form-control" type="text" th:field="*{origin}"/>
+    </div>
+    <div class="form-group">
+        <label th:for="${#ids.next('destination')}">To</label>
+        <input class="form-control" type="text" th:field="*{destination}"/>
+    </div>
+    <div class="form-group">
+        <label th:for="${#ids.next('departureTime')}">Departure Time</label>
+        <input class="form-control" type="datetime-local" th:field="*{departureTime}"/>
+    </div>
+    <div class="form-group">
+        <label th:for="${#ids.next('arrivalTime')}">Arrival Time</label>
+        <input class="form-control" type="datetime-local" th:field="*{arrivalTime}"/>
+    </div>
+    <div class="form-group">
+        <label th:for="${#ids.next('capacity')}">Capacity</label>
+        <input class="form-control" type="number" th:field="*{capacity}"/>
+    </div>
+    <div class="form-group">
+        <input type="checkbox" th:field="*{publishNow}"/>
+        <label th:for="${#ids.prev('publishNow')}">Publish Now</label>
+    </div>
+    <button class="btn btn-default" type="submit">Create</button>
+</form>
 </body>
 </html>
