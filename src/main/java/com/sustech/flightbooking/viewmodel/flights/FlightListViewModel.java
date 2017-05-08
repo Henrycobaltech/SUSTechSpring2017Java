@@ -5,8 +5,8 @@ import com.sustech.flightbooking.domainmodel.FlightStatus;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public class FlightViewModel {
-    private String flightId;
+public class FlightListViewModel {
+    private String flightNumber;
     private double price;
     private LocalDateTime departureTime;
     private LocalDateTime arrivalTime;
@@ -17,12 +17,12 @@ public class FlightViewModel {
     private FlightStatus status;
     private UUID id;
 
-    public String getFlightId() {
-        return flightId;
+    public String getFlightNumber() {
+        return flightNumber;
     }
 
-    public void setFlightId(String flightId) {
-        this.flightId = flightId;
+    public void setFlightNumber(String flightNumber) {
+        this.flightNumber = flightNumber;
     }
 
     public double getPrice() {

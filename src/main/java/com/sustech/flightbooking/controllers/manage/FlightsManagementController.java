@@ -9,7 +9,7 @@ import com.sustech.flightbooking.services.FlightService;
 import com.sustech.flightbooking.viewmodel.OrderAdminViewModel;
 import com.sustech.flightbooking.viewmodel.flights.CreateFlightViewModel;
 import com.sustech.flightbooking.viewmodel.flights.FlightDetailViewModel;
-import com.sustech.flightbooking.viewmodel.flights.FlightViewModel;
+import com.sustech.flightbooking.viewmodel.flights.FlightListViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -37,13 +37,13 @@ public class FlightsManagementController extends ControllerBase {
     @GetMapping("")
     public ModelAndView showAll() {
         ModelAndView modelAndView = page("admin/flights/list");
-        List<FlightViewModel> flightViewModels = flightRepository.findAll().stream()
+        List<FlightListViewModel> flightListViewModels = flightRepository.findAll().stream()
                 .filter(flight -> !flight.isDeleted())
                 .map(flight -> {
-                    FlightViewModel vm = new FlightViewModel();
+                    FlightListViewModel vm = new FlightListViewModel();
 
                     vm.setId(flight.getId());
-                    vm.setFlightId(flight.getFlightNumber());
+                    vm.setFlightNumber(flight.getFlightNumber());
                     vm.setPrice(flight.getPrice());
                     vm.setOrigin(flight.getOrigin());
                     vm.setDestination(flight.getDestination());
@@ -55,7 +55,7 @@ public class FlightsManagementController extends ControllerBase {
                     return vm;
                 })
                 .collect(Collectors.toList());
-        modelAndView.getModelMap().put("flights", flightViewModels);
+        modelAndView.getModelMap().put("flights", flightListViewModels);
         return modelAndView;
     }
 
@@ -99,7 +99,7 @@ public class FlightsManagementController extends ControllerBase {
         }
         FlightDetailViewModel vm = new FlightDetailViewModel();
 
-        vm.setFlightId(flight.getFlightNumber());
+        vm.setFlightNumber(flight.getFlightNumber());
         vm.setPrice(flight.getPrice());
         vm.setOrigin(flight.getOrigin());
         vm.setDestination(flight.getDestination());

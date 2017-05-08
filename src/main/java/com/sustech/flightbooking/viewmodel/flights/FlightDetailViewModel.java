@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class FlightDetailViewModel {
-    private String flightId;
+    private String flightNumber;
     private double price;
     private LocalDateTime departureTime;
     private LocalDateTime arrivalTime;
@@ -27,12 +27,12 @@ public class FlightDetailViewModel {
         this.orders = orders;
     }
 
-    public String getFlightId() {
-        return flightId;
+    public String getFlightNumber() {
+        return flightNumber;
     }
 
-    public void setFlightId(String flightId) {
-        this.flightId = flightId;
+    public void setFlightNumber(String flightNumber) {
+        this.flightNumber = flightNumber;
     }
 
     public double getPrice() {
