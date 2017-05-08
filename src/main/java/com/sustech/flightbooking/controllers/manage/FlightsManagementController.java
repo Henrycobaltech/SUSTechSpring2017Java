@@ -68,7 +68,7 @@ public class FlightsManagementController extends ControllerBase {
     @PostMapping("create")
     public ModelAndView create(@ModelAttribute CreateFlightViewModel model) {
         Flight flight = new Flight(UUID.randomUUID(),
-                model.getFlightId(),
+                model.getFlightNumber(),
                 model.getPrice(),
                 model.getOrigin(),
                 model.getDestination(),
