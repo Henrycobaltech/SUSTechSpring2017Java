@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="~{shared/layout}"
+      xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <title>My Orders</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="page-header">
+        <h1>My Orders</h1>
+    </div>
+    <table class="table table-hover">
+        <thead>
+        <th>Creation Time</th>
+        <th>Flight Number</th>
+        <th>From</th>
+        <th>To</th>
+        <th>Departure Time</th>
+        <th>Arrival Time</th>
+        <th>Price</th>
+        <th>Status</th>
+        <th>Action</th>
+        </thead>
+        <tbody>
+        <tr th:each="order:${orders}">
+            <td th:text="${order.creationTime}"></td>
+            <td th:text="${order.flightNumber}"></td>
+            <td th:text="${order.origin}"></td>
+            <td th:text="${order.destination}"></td>
+            <td th:text="${order.departureTime}"></td>
+            <td th:text="${order.arrivalTime}"></td>
+            <td th:text="${order.price}"></td>
+            <td th:text="${order.status}"></td>
+
+            <td>
+                <a class="col-md-1" th:href="@{'/passenger/orders/'+${order.id}+'/pay'}"
+                   th:if="${order.status.toString()}=='UNPAID'">Pay</a>
+                <a class="col-md-1" th:href="@{'/passenger/orders/'+${order.id}+'/cancel'}"
+                   th:if="${order.status.toString()}=='PAID'">Cancel</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

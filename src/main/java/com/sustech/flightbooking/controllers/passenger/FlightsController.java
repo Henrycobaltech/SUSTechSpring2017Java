@@ -87,7 +87,7 @@ public class FlightsController extends ControllerBase {
         if (!flightService.getAvailableSeats(flight).contains(model.getSeat())) {
             return badRequest("Seat not available.");
         }
-        Order order = new Order(UUID.randomUUID(), flight, (Passenger) identityService.getCurrentUser());
+        Order order = new Order(UUID.randomUUID(), flight, (Passenger) identityService.getCurrentUser(), model.getSeat());
         orderRepository.save(order);
         return redirect(String.format("/passenger/orders/%s/pay", order.getId()));
     }

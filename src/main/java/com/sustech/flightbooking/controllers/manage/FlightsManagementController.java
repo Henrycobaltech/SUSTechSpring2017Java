@@ -174,16 +174,7 @@ public class FlightsManagementController extends ControllerBase {
         vm.setOrderCount(flightService.getOrders(flight).size());
 
         List<OrderAdminViewModel> orders = flightService.getOrders(flight).stream()
-                .map(order -> {
-                    OrderAdminViewModel orderVm = new OrderAdminViewModel();
-                    orderVm.setCreationTime(order.getCreatedTime());
-                    orderVm.setSeat(order.getSeat());
-                    orderVm.setPassengerName(order.getPassenger().getDisplayName());
-                    orderVm.setFlightId(order.getFlight().getId());
-                    orderVm.setStatus(orderService.getStatus(order));
-                    orderVm.setFlightNumber(order.getFlight().getFlightNumber());
-                    return orderVm;
-                })
+                .map(OrderAdminViewModel::createFromDomainModel)
                 .collect(Collectors.toList());
         vm.setOrders(orders);
 

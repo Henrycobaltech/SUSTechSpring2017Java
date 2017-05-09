@@ -18,27 +18,16 @@ import java.util.stream.Collectors;
 public class OrdersManagementController extends ControllerBase {
 
     private final OrderRepository orderRepository;
-    private final OrderService orderService;
 
     @Autowired
-    public OrdersManagementController(OrderRepository orderRepository, OrderService orderService) {
+    public OrdersManagementController(OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
-        this.orderService = orderService;
     }
 
     @GetMapping("")
     public ModelAndView showAll() {
         List<OrderAdminViewModel> viewModels = orderRepository.findAll().stream()
-                .map(order -> {
-                    OrderAdminViewModel orderVm = new OrderAdminViewModel();
-                    orderVm.setCreationTime(order.getCreatedTime());
-                    orderVm.setSeat(order.getSeat());
-                    orderVm.setPassengerName(order.getPassenger().getDisplayName());
-                    orderVm.setFlightId(order.getFlight().getId());
-                    orderVm.setStatus(orderService.getStatus(order));
-                    orderVm.setFlightNumber(order.getFlight().getFlightNumber());
-                    return orderVm;
-                })
+                .map(OrderAdminViewModel::createFromDomainModel)
                 .collect(Collectors.toList());
         ModelAndView modelAndView = page("admin/orders/list");
         modelAndView.getModelMap().put("orders", viewModels);

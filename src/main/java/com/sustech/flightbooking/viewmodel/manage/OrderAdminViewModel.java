@@ -62,4 +62,14 @@ public class OrderAdminViewModel {
         this.status = status;
     }
 
+    public static OrderAdminViewModel createFromDomainModel(Order order) {
+        OrderAdminViewModel vm = new OrderAdminViewModel();
+        vm.setCreationTime(order.getCreatedTime());
+        vm.setSeat(order.getSeat());
+        vm.setStatus(order.getStatus());
+        vm.setPassengerName(order.getPassenger().getDisplayName());
+        vm.setFlightId(order.getFlight().getId());
+        vm.setFlightNumber(order.getFlight().getFlightNumber());
+        return vm;
+    }
 }

@@ -2,6 +2,7 @@ package com.sustech.flightbooking.persistence.impl;
 
 import com.sustech.flightbooking.domainmodel.Flight;
 import com.sustech.flightbooking.domainmodel.Order;
+import com.sustech.flightbooking.domainmodel.Passenger;
 import com.sustech.flightbooking.persistence.OrderRepository;
 import org.mongodb.morphia.Datastore;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,13 @@ public class OrderRepositoryImpl extends RepositoryImplBase<Order> implements Or
     public List<Order> findByFlight(Flight flight) {
         return datastore.createQuery(Order.class).asList().stream()
                 .filter(o -> o.getFlight().equals(flight))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Order> findByPassenger(Passenger passenger) {
+        return datastore.createQuery(Order.class).asList().stream()
+                .filter(o -> o.getPassenger().equals(passenger))
                 .collect(Collectors.toList());
     }
 

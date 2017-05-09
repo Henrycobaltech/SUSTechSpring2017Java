@@ -8,29 +8,9 @@ import com.sustech.flightbooking.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 public class OrderServiceImpl implements OrderService {
 
-    private final FlightService flightService;
-
-    @Autowired
-    public OrderServiceImpl(FlightService flightService) {
-        this.flightService = flightService;
-    }
-
-    @Override
-    public OrderStatus getStatus(Order order) {
-        if (order.isCancelled()) {
-            return OrderStatus.CANCELLED;
-        }
-        if (order.isPaid()) {
-            return OrderStatus.PAID;
-        }
-        if (flightService.getStatus(order.getFlight()) == FlightStatus.TERMINATE
-                && !order.isPaid()) {
-            return OrderStatus.EXPIRED;
-        } else {
-            return OrderStatus.UNPAID;
-        }
-    }
 }

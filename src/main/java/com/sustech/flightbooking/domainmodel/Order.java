@@ -22,11 +22,12 @@ public class Order extends EntityBase {
     @Reference
     private Passenger passenger;
 
-    public Order(UUID id, Flight flight, Passenger passenger) {
+    public Order(UUID id, Flight flight, Passenger passenger, int seat) {
         super(id);
         this.flight = flight;
         this.passenger = passenger;
         this.createdTime = LocalDateTime.now();
+        this.seat = seat;
     }
 
     public Order() {
@@ -70,6 +71,20 @@ public class Order extends EntityBase {
             return this.price;
         } else {
             return this.flight.getPrice();
+        }
+    }
+
+    public OrderStatus getStatus() {
+        if (this.isCancelled()) {
+            return OrderStatus.CANCELLED;
+        }
+        if (this.isPaid()) {
+            return OrderStatus.PAID;
+        }
+        if (this.getFlight().getDepartureTime().isBefore(LocalDateTime.now())) {
+            return OrderStatus.EXPIRED;
+        } else {
+            return OrderStatus.UNPAID;
         }
     }
 }
