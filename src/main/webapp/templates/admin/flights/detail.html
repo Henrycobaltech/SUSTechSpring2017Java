@@ -10,6 +10,15 @@
     <div class="page-header">
         <h1 th:text="${'Flight '+model.flightNumber}"></h1>
     </div>
+    <div class="row">
+        <a class="col-md-1" th:href="@{'/manage/flights/'+${model.id}+'/publish'}"
+           th:if="${model.status.toString()}=='UNPUBLISHED'">Publish</a>
+        <a class="col-md-1" th:href="@{'/manage/flights/'+${model.id}+'/edit'}"
+           th:unless="(${model.status.toString()}=='TERMINATE') or (${model.status.toString()}=='DELETED')">Edit</a>
+        <a class="col-md-1" th:href="@{'/manage/flights/'+${model.id}+'/delete'}"
+           th:if="(${model.status.toString()}=='UNPUBLISHED') or (${model.status.toString()}=='TERMINATE')">Delete</a>
+    </div>
+    <br/>
     <div>
         <ul class="nav nav-tabs" id="mainTabs">
             <li role="presentation" class="active"><a href="#flight-info" aria-controls="flight-info" role="tab"
@@ -31,7 +40,7 @@
                         <h3 th:text="${model.departureTime.toString().replace('T',' ')}"></h3>
                     </div>
                     <div class="col-md-4">
-                        <h2>Departure</h2>
+                        <h2>Arrival</h2>
                         <h3 th:text="${model.arrivalTime.toString().replace('T',' ')}"></h3>
                     </div>
                 </div>
@@ -60,6 +69,7 @@
   e.preventDefault()
   $(this).tab('show')
 })
+
 
     </script>
 </div>

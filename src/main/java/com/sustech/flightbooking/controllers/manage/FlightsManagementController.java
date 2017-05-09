@@ -156,6 +156,7 @@ public class FlightsManagementController extends ControllerBase {
         }
         FlightDetailViewModel vm = new FlightDetailViewModel();
 
+        vm.setId(id);
         vm.setFlightNumber(flight.getFlightNumber());
         vm.setPrice(flight.getPrice());
         vm.setOrigin(flight.getOrigin());
@@ -186,7 +187,7 @@ public class FlightsManagementController extends ControllerBase {
         }
         flight.publish();
         flightRepository.save(flight);
-        return redirect(String.format("manage/flights/%s", id));
+        return redirect(String.format("/manage/flights/%s", id));
     }
 
     @GetMapping("{id}/delete")
@@ -202,6 +203,6 @@ public class FlightsManagementController extends ControllerBase {
         }
         flight.delete();
         flightRepository.save(flight);
-        return redirect("manage/flights");
+        return redirect("/manage/flights");
     }
 }

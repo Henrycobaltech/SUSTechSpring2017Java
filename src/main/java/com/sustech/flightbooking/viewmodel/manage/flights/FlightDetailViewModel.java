@@ -5,6 +5,7 @@ import com.sustech.flightbooking.viewmodel.manage.OrderAdminViewModel;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 public class FlightDetailViewModel {
     private String flightNumber;
@@ -16,6 +17,7 @@ public class FlightDetailViewModel {
     private int capacity;
     private int orderCount;
     private FlightStatus status;
+    private UUID id;
 
     private List<OrderAdminViewModel> orders;
 
@@ -97,5 +99,13 @@ public class FlightDetailViewModel {
 
     public void setStatus(FlightStatus status) {
         this.status = status;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 }
