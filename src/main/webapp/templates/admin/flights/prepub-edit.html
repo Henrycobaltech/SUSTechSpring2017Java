@@ -3,12 +3,13 @@
       xmlns:th="http://www.w3.org/1999/xhtml"
       xmlns:layout="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Create Flight</title>
+    <title>Edit Flight</title>
 </head>
 <body>
 
-<h1 layout:fragment="header">New Flight</h1>
-<form layout:fragment="form" class="col-md-6" action="#" th:action="@{/manage/flights/create}" th:object="${model}"
+<h1 layout:fragment="header">Edit Flight</h1>
+<form layout:fragment="form" class="col-md-6" action="#" th:action="@{'/manage/flights/'+${flightId}+'/prepubupdate'}"
+      th:object="${model}"
       method="post">
     <div class="form-group">
         <label th:for="${#ids.next('flightNumber')}">Flight Number</label>
@@ -42,7 +43,7 @@
         <input type="checkbox" th:field="*{publishNow}"/>
         <label th:for="${#ids.prev('publishNow')}">Publish Now</label>
     </div>
-    <button class="btn btn-primary" type="submit">Create</button>
+    <button class="btn btn-primary" type="submit">Save</button>
 </form>
 </body>
 </html>

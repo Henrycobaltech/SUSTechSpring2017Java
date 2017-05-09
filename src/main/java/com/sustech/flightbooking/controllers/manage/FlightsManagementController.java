@@ -7,7 +7,8 @@ import com.sustech.flightbooking.domainmodel.FlightStatus;
 import com.sustech.flightbooking.persistence.FlightRepository;
 import com.sustech.flightbooking.services.FlightService;
 import com.sustech.flightbooking.viewmodel.manage.OrderAdminViewModel;
-import com.sustech.flightbooking.viewmodel.manage.flights.CreateFlightViewModel;
+import com.sustech.flightbooking.viewmodel.manage.flights.CreateEditFlightViewModel;
+import com.sustech.flightbooking.viewmodel.manage.flights.FlightEditViewModel;
 import com.sustech.flightbooking.viewmodel.manage.flights.FlightDetailViewModel;
 import com.sustech.flightbooking.viewmodel.manage.flights.FlightListViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,12 +63,68 @@ public class FlightsManagementController extends ControllerBase {
     @GetMapping("create")
     public ModelAndView createFlight() {
         return pageWithViewModel("admin/flights/create",
-                new CreateFlightViewModel());
+                new CreateEditFlightViewModel());
     }
 
     @PostMapping("create")
-    public ModelAndView create(@ModelAttribute CreateFlightViewModel model) {
-        Flight flight = new Flight(UUID.randomUUID(),
+    public ModelAndView create(@ModelAttribute CreateEditFlightViewModel model) {
+        return createOrUpdateFlight(model, UUID.randomUUID());
+    }
+
+    @GetMapping("{id}/edit")
+    public ModelAndView editPage(@PathVariable UUID id) {
+        Flight flight = flightRepository.findById(id);
+        if (flight == null) {
+            return notFound();
+        }
+        if (flightService.getStatus(flight) == FlightStatus.UNPUBLISHED) {
+            CreateEditFlightViewModel vm = new CreateEditFlightViewModel();
+            vm.setFlightNumber(flight.getFlightNumber());
+            vm.setOrigin(flight.getOrigin());
+            vm.setDestination(flight.getDestination());
+            vm.setPrice(flight.getPrice());
+            vm.setCapacity(flight.getCapacity());
+            vm.setDepartureTime(flight.getDepartureTime());
+            vm.setArrivalTime(flight.getArrivalTime());
+            ModelAndView modelAndView = pageWithViewModel("admin/flights/prepub-edit", vm);
+            modelAndView.getModelMap().put("flightId", flight.getId());
+            return modelAndView;
+        } else {
+            FlightEditViewModel vm = new FlightEditViewModel();
+            vm.setCapacity(flight.getCapacity());
+            vm.setPrice(flight.getPrice());
+            ModelAndView modelAndView = pageWithViewModel("admin/flights/edit", vm);
+            modelAndView.getModelMap().put("flightId", flight.getId());
+            return modelAndView;
+        }
+    }
+
+    @PostMapping("{id}/prepubupdate")
+    public ModelAndView prePubUpdate(@ModelAttribute CreateEditFlightViewModel model, @PathVariable UUID id) {
+        if (flightRepository.findById(id) == null) {
+            return notFound();
+        }
+        return createOrUpdateFlight(model, id);
+    }
+
+    @PostMapping("{id}/update")
+    public ModelAndView update(@ModelAttribute FlightEditViewModel model, @PathVariable UUID id) {
+        Flight flight = flightRepository.findById(id);
+        if (flight == null) {
+            return notFound();
+        }
+        flight.setCapacity(model.getCapacity());
+        flight.setPrice(model.getPrice());
+        List<String> errorMessages = flightService.validate(flight);
+        if (errorMessages.size() > 0) {
+            //show error messages
+        }
+        flightRepository.save(flight);
+        return redirect("/manage/flights");
+    }
+
+    private ModelAndView createOrUpdateFlight(CreateEditFlightViewModel model, UUID id) {
+        Flight flight = new Flight(id,
                 model.getFlightNumber(),
                 model.getPrice(),
                 model.getOrigin(),
