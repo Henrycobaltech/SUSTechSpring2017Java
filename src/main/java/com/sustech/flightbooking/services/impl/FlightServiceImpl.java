@@ -41,7 +41,12 @@ public class FlightServiceImpl implements FlightService {
     @Override
     public List<String> validate(Flight flight) {
         List<String> errorMessages = new ArrayList<>();
-
+        if(flight.getArrivalTime().isBefore(flight.getDepartureTime()))
+            errorMessages.add("ArrivalTime is before DepartureTime");
+        if(flight.getDepartureTime().minusHours(2).isBefore(LocalDateTime.now()))
+            errorMessages.add("DepartureTime should be two hours more than the current time");
+        if(flight.getCapacity() < orderRepository.findByFlight(flight).size())
+            errorMessages.add("The number of orders is beyond capacity");
         return errorMessages;
     }
 
