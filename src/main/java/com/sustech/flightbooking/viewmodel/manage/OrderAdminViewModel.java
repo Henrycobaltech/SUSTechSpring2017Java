@@ -1,4 +1,4 @@
-package com.sustech.flightbooking.viewmodel;
+package com.sustech.flightbooking.viewmodel.manage;
 
 import com.sustech.flightbooking.domainmodel.Order;
 import com.sustech.flightbooking.domainmodel.OrderStatus;

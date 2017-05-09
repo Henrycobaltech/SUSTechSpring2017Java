@@ -1,22 +1,21 @@
-package com.sustech.flightbooking.viewmodel.flights;
+package com.sustech.flightbooking.viewmodel.manage.flights;
 
-import org.springframework.format.annotation.DateTimeFormat;
+import com.sustech.flightbooking.domainmodel.FlightStatus;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
-public class CreateFlightViewModel {
+public class FlightListViewModel {
     private String flightNumber;
-
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private double price;
     private LocalDateTime departureTime;
-
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime arrivalTime;
     private String origin;
     private String destination;
-    private double price;
     private int capacity;
-    private boolean publishNow;
+    private int orderCount;
+    private FlightStatus status;
+    private UUID id;
 
     public String getFlightNumber() {
         return flightNumber;
@@ -24,6 +23,14 @@ public class CreateFlightViewModel {
 
     public void setFlightNumber(String flightNumber) {
         this.flightNumber = flightNumber;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     public LocalDateTime getDepartureTime() {
@@ -66,19 +73,27 @@ public class CreateFlightViewModel {
         this.capacity = capacity;
     }
 
-    public boolean isPublishNow() {
-        return publishNow;
+    public FlightStatus getStatus() {
+        return status;
     }
 
-    public void setPublishNow(boolean publishNow) {
-        this.publishNow = publishNow;
+    public void setStatus(FlightStatus status) {
+        this.status = status;
     }
 
-    public double getPrice() {
-        return price;
+    public int getOrderCount() {
+        return orderCount;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setOrderCount(int orderCount) {
+        this.orderCount = orderCount;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public UUID getId() {
+        return id;
     }
 }

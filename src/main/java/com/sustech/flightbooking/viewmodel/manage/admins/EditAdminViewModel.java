@@ -1,4 +1,4 @@
-package com.sustech.flightbooking.viewmodel.admins;
+package com.sustech.flightbooking.viewmodel.manage.admins;
 
 public class EditAdminViewModel {
     private String userName;

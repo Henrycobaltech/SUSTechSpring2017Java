@@ -1,11 +1,12 @@
-package com.sustech.flightbooking.viewmodel.flights;
+package com.sustech.flightbooking.viewmodel.manage.flights;
 
 import com.sustech.flightbooking.domainmodel.FlightStatus;
+import com.sustech.flightbooking.viewmodel.manage.OrderAdminViewModel;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
+import java.util.List;
 
-public class FlightListViewModel {
+public class FlightDetailViewModel {
     private String flightNumber;
     private double price;
     private LocalDateTime departureTime;
@@ -15,7 +16,16 @@ public class FlightListViewModel {
     private int capacity;
     private int orderCount;
     private FlightStatus status;
-    private UUID id;
+
+    private List<OrderAdminViewModel> orders;
+
+    public List<OrderAdminViewModel> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<OrderAdminViewModel> orders) {
+        this.orders = orders;
+    }
 
     public String getFlightNumber() {
         return flightNumber;
@@ -73,14 +83,6 @@ public class FlightListViewModel {
         this.capacity = capacity;
     }
 
-    public FlightStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(FlightStatus status) {
-        this.status = status;
-    }
-
     public int getOrderCount() {
         return orderCount;
     }
@@ -89,11 +91,11 @@ public class FlightListViewModel {
         this.orderCount = orderCount;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
+    public FlightStatus getStatus() {
+        return status;
     }
 
-    public UUID getId() {
-        return id;
+    public void setStatus(FlightStatus status) {
+        this.status = status;
     }
 }

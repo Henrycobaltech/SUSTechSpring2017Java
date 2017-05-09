@@ -1,31 +1,22 @@
-package com.sustech.flightbooking.viewmodel.flights;
+package com.sustech.flightbooking.viewmodel.manage.flights;
 
-import com.sustech.flightbooking.domainmodel.FlightStatus;
-import com.sustech.flightbooking.viewmodel.OrderAdminViewModel;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
-public class FlightDetailViewModel {
+public class CreateFlightViewModel {
     private String flightNumber;
-    private double price;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime departureTime;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime arrivalTime;
     private String origin;
     private String destination;
+    private double price;
     private int capacity;
-    private int orderCount;
-    private FlightStatus status;
-
-    private List<OrderAdminViewModel> orders;
-
-    public List<OrderAdminViewModel> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(List<OrderAdminViewModel> orders) {
-        this.orders = orders;
-    }
+    private boolean publishNow;
 
     public String getFlightNumber() {
         return flightNumber;
@@ -33,14 +24,6 @@ public class FlightDetailViewModel {
 
     public void setFlightNumber(String flightNumber) {
         this.flightNumber = flightNumber;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
     }
 
     public LocalDateTime getDepartureTime() {
@@ -83,19 +66,19 @@ public class FlightDetailViewModel {
         this.capacity = capacity;
     }
 
-    public int getOrderCount() {
-        return orderCount;
+    public boolean isPublishNow() {
+        return publishNow;
     }
 
-    public void setOrderCount(int orderCount) {
-        this.orderCount = orderCount;
+    public void setPublishNow(boolean publishNow) {
+        this.publishNow = publishNow;
     }
 
-    public FlightStatus getStatus() {
-        return status;
+    public double getPrice() {
+        return price;
     }
 
-    public void setStatus(FlightStatus status) {
-        this.status = status;
+    public void setPrice(double price) {
+        this.price = price;
     }
 }

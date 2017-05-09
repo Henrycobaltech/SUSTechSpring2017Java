@@ -3,14 +3,12 @@ package com.sustech.flightbooking.controllers.manage;
 import com.sustech.flightbooking.controllers.ControllerBase;
 import com.sustech.flightbooking.domainmodel.Administrator;
 import com.sustech.flightbooking.persistence.AdministratorsRepository;
-import com.sustech.flightbooking.viewmodel.admins.CreateAdminViewModel;
-import com.sustech.flightbooking.viewmodel.admins.EditAdminViewModel;
+import com.sustech.flightbooking.viewmodel.manage.admins.CreateAdminViewModel;
+import com.sustech.flightbooking.viewmodel.manage.admins.EditAdminViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.View;
-import org.thymeleaf.spring4.view.ThymeleafView;
 
 import java.util.UUID;
 
