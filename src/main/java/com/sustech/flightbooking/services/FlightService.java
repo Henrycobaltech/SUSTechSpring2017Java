@@ -12,4 +12,6 @@ public interface FlightService {
     List<String> validate(Flight flight);
 
     List<Order> getOrders(Flight flight);
+
+    List<Integer> getAvailableSeats(Flight flight);
 }

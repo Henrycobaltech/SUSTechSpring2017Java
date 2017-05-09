@@ -6,6 +6,7 @@ import com.sustech.flightbooking.domainmodel.Flight;
 import com.sustech.flightbooking.domainmodel.FlightStatus;
 import com.sustech.flightbooking.persistence.FlightRepository;
 import com.sustech.flightbooking.services.FlightService;
+import com.sustech.flightbooking.services.OrderService;
 import com.sustech.flightbooking.viewmodel.manage.OrderAdminViewModel;
 import com.sustech.flightbooking.viewmodel.manage.flights.CreateEditFlightViewModel;
 import com.sustech.flightbooking.viewmodel.manage.flights.FlightEditViewModel;
@@ -27,11 +28,13 @@ public class FlightsManagementController extends ControllerBase {
 
     private final FlightRepository flightRepository;
     private final FlightService flightService;
+    private final OrderService orderService;
 
     @Autowired
-    public FlightsManagementController(FlightRepository flightRepository, FlightService flightService) {
+    public FlightsManagementController(FlightRepository flightRepository, FlightService flightService, OrderService orderService) {
         this.flightRepository = flightRepository;
         this.flightService = flightService;
+        this.orderService = orderService;
     }
 
 
@@ -101,7 +104,8 @@ public class FlightsManagementController extends ControllerBase {
 
     @PostMapping("{id}/prepubupdate")
     public ModelAndView prePubUpdate(@ModelAttribute CreateEditFlightViewModel model, @PathVariable UUID id) {
-        if (flightRepository.findById(id) == null) {
+        Flight flight = flightRepository.findById(id);
+        if (flight == null || flightService.getStatus(flight) != FlightStatus.UNPUBLISHED) {
             return notFound();
         }
         return createOrUpdateFlight(model, id);
@@ -110,7 +114,9 @@ public class FlightsManagementController extends ControllerBase {
     @PostMapping("{id}/update")
     public ModelAndView update(@ModelAttribute FlightEditViewModel model, @PathVariable UUID id) {
         Flight flight = flightRepository.findById(id);
-        if (flight == null) {
+        if (flight == null ||
+                (flightService.getStatus(flight) != FlightStatus.AVAILABLE
+                        && flightService.getStatus(flight) != FlightStatus.FULL)) {
             return notFound();
         }
         flight.setCapacity(model.getCapacity());
@@ -168,7 +174,16 @@ public class FlightsManagementController extends ControllerBase {
         vm.setOrderCount(flightService.getOrders(flight).size());
 
         List<OrderAdminViewModel> orders = flightService.getOrders(flight).stream()
-                .map(OrderAdminViewModel::createFromDomainModel)
+                .map(order -> {
+                    OrderAdminViewModel orderVm = new OrderAdminViewModel();
+                    orderVm.setCreationTime(order.getCreatedTime());
+                    orderVm.setSeat(order.getSeat());
+                    orderVm.setPassengerName(order.getPassenger().getDisplayName());
+                    orderVm.setFlightId(order.getFlight().getId());
+                    orderVm.setStatus(orderService.getStatus(order));
+                    orderVm.setFlightNumber(order.getFlight().getFlightNumber());
+                    return orderVm;
+                })
                 .collect(Collectors.toList());
         vm.setOrders(orders);
 

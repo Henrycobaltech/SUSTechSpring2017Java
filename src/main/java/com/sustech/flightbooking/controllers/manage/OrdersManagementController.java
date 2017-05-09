@@ -2,6 +2,7 @@ package com.sustech.flightbooking.controllers.manage;
 
 import com.sustech.flightbooking.controllers.ControllerBase;
 import com.sustech.flightbooking.persistence.OrderRepository;
+import com.sustech.flightbooking.services.OrderService;
 import com.sustech.flightbooking.viewmodel.manage.OrderAdminViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,16 +18,27 @@ import java.util.stream.Collectors;
 public class OrdersManagementController extends ControllerBase {
 
     private final OrderRepository orderRepository;
+    private final OrderService orderService;
 
     @Autowired
-    public OrdersManagementController(OrderRepository orderRepository) {
+    public OrdersManagementController(OrderRepository orderRepository, OrderService orderService) {
         this.orderRepository = orderRepository;
+        this.orderService = orderService;
     }
 
     @GetMapping("")
     public ModelAndView showAll() {
         List<OrderAdminViewModel> viewModels = orderRepository.findAll().stream()
-                .map(OrderAdminViewModel::createFromDomainModel)
+                .map(order -> {
+                    OrderAdminViewModel orderVm = new OrderAdminViewModel();
+                    orderVm.setCreationTime(order.getCreatedTime());
+                    orderVm.setSeat(order.getSeat());
+                    orderVm.setPassengerName(order.getPassenger().getDisplayName());
+                    orderVm.setFlightId(order.getFlight().getId());
+                    orderVm.setStatus(orderService.getStatus(order));
+                    orderVm.setFlightNumber(order.getFlight().getFlightNumber());
+                    return orderVm;
+                })
                 .collect(Collectors.toList());
         ModelAndView modelAndView = page("admin/orders/list");
         modelAndView.getModelMap().put("orders", viewModels);

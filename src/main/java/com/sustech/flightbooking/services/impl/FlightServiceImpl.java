@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 public class FlightServiceImpl implements FlightService {
@@ -53,5 +55,19 @@ public class FlightServiceImpl implements FlightService {
     @Override
     public List<Order> getOrders(Flight flight) {
         return orderRepository.findByFlight(flight);
+    }
+
+    @Override
+    public List<Integer> getAvailableSeats(Flight flight) {
+        List<Integer> bookedSeats = orderRepository.findByFlight(flight).stream()
+                .map(Order::getSeat)
+                .collect(Collectors.toList());
+        int maxBookedSeats = bookedSeats.stream().mapToInt(x -> x).max().orElse(0);
+        List<Integer> seatRange = IntStream.rangeClosed(1, Math.max(flight.getCapacity(), maxBookedSeats))
+                .boxed().collect(Collectors.toList());
+        seatRange.removeAll(bookedSeats);
+        return seatRange.stream()
+                .limit(flight.getCapacity() - bookedSeats.size())
+                .collect(Collectors.toList());
     }
 }
