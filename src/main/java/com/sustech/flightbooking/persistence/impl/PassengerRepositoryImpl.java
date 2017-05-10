@@ -20,4 +20,9 @@ public class PassengerRepositoryImpl
     protected Class<Passenger> getEntityType() {
         return Passenger.class;
     }
+
+    @Override
+    public Passenger findByIdCard(String idCard) {
+        return datastore.createQuery(Passenger.class).field("identityCardNumber").equal(idCard).get();
+    }
 }

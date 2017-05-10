@@ -1,6 +1,6 @@
-package com.sustech.flightbooking.viewmodel.manage.passengers;
+package com.sustech.flightbooking.viewmodel;
 
-public class CreatePassengerViewModel {
+public class RegisterPassengerViewModel {
     private String userName;
     private String password;
     private String confirmPassword;

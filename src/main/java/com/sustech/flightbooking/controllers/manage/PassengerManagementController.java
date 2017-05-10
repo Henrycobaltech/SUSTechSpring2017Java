@@ -3,7 +3,7 @@ package com.sustech.flightbooking.controllers.manage;
 import com.sustech.flightbooking.controllers.ControllerBase;
 import com.sustech.flightbooking.domainmodel.Passenger;
 import com.sustech.flightbooking.persistence.PassengerRepository;
-import com.sustech.flightbooking.viewmodel.manage.passengers.CreatePassengerViewModel;
+import com.sustech.flightbooking.viewmodel.RegisterPassengerViewModel;
 import com.sustech.flightbooking.viewmodel.manage.passengers.EditPassengerViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,12 +30,6 @@ public class PassengerManagementController extends ControllerBase {
         return modelAndView;
     }
 
-    @GetMapping("create")
-    public ModelAndView createPage() {
-        return pageWithViewModel("admin/passengers/create",
-                new CreatePassengerViewModel());
-    }
-
     @GetMapping("{id}/edit")
     public ModelAndView editPage(@PathVariable UUID id) {
         Passenger passenger = passengerRepository.findById(id);
@@ -54,20 +48,8 @@ public class PassengerManagementController extends ControllerBase {
         }
     }
 
-    @PostMapping("create")
-    public ModelAndView create(@ModelAttribute CreatePassengerViewModel model) {
-        Passenger passenger = new Passenger(UUID.randomUUID());
-
-        passenger.setUserName(model.getUserName());
-        passenger.setDisplayName(model.getDisplayName());
-        passenger.setIdentityCardNumber(model.getIdentityNumber());
-
-        passengerRepository.save(passenger);
-        return redirect("/manage/passengers");
-    }
-
     @PostMapping("{id}/update")
-    public ModelAndView update(@ModelAttribute CreatePassengerViewModel model, @PathVariable UUID id) {
+    public ModelAndView update(@ModelAttribute RegisterPassengerViewModel model, @PathVariable UUID id) {
         Passenger passenger = passengerRepository.findById(id);
         if (passenger == null) {
             return notFound();

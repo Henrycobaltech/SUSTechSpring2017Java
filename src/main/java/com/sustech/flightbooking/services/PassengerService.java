@@ -1,5 +1,8 @@
 package com.sustech.flightbooking.services;
 
-public interface PassengerService {
+import com.sustech.flightbooking.domainmodel.Passenger;
 
+import java.util.List;
+
+public interface PassengerService {
 }

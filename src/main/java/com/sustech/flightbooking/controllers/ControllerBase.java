@@ -1,8 +1,13 @@
 package com.sustech.flightbooking.controllers;
 
+import com.sun.xml.internal.ws.api.ha.StickyFeature;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public abstract class ControllerBase {
 
@@ -42,5 +47,9 @@ public abstract class ControllerBase {
         ModelAndView modelAndView = page(viewName);
         modelAndView.getModelMap().put("model", viewModel);
         return modelAndView;
+    }
+
+    public List<String> errorMessages(String... messages) {
+        return Arrays.asList(messages);
     }
 }
