@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <body>
-<nav th:fragment="nav" class="navbar navbar-default navbar-fixed-top">
+<nav data-th-fragment="nav" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
             <button class="navbar-toggle collapsed" aria-expanded="false" aria-controls="navbar" type="button"
@@ -32,9 +32,9 @@
 
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li th:if="${loggedIn}"><p class="navbar-text navbar-right">Hello <span
-                        th:text="${currentUserDisplayName}"></span> <a href="/logout">Logout</a></p></li>
-                <li th:unless="${loggedIn}"><a href="/login">Login</a></li>
+                <li data-th-if="${loggedIn}"><p class="navbar-text navbar-right">Hello <span
+                        data-th-text="${currentUserDisplayName}"></span> <a href="/logout">Logout</a></p></li>
+                <li data-th-unless="${loggedIn}"><a href="/login">Login</a></li>
             </ul>
         </div>
     </div>

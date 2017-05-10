@@ -1,34 +1,33 @@
 <!DOCTYPE html>
-<html lang="en" layout:decorate="~{shared/layout}"
-      xmlns:th="http://www.w3.org/1999/xhtml"
-      xmlns:layout="http://www.w3.org/1999/xhtml">
+<html lang="en" data-layout-decorate="~{shared/layout}"
+>
 <head>
     <title>Book Flight</title>
 </head>
 <body>
-<div layout:fragment="content">
+<div data-layout-fragment="content">
     <div class="page-header">
         <h1>Book Flight</h1>
     </div>
-    <form layout:fragment="form" class="col-md-6" action="#" th:action="@{'/passenger/flights/book'}"
-          th:object="${model}"
+    <form data-layout-fragment="form" class="col-md-6" action="#" data-th-action="@{'/passenger/flights/book'}"
+          data-th-object="${model}"
           method="post">
-        <h2>From <b th:text="${flight.origin}"></b>
-            <small th:text="${flight.departureTime.toString().replace('T',' ')}"></small>
+        <h2>From <b data-th-text="${flight.origin}"></b>
+            <small data-th-text="${flight.departureTime.toString().replace('T',' ')}"></small>
         </h2>
-        <h2>To <b th:text="${flight.destination}"></b>
-            <small th:text="${flight.arrivalTime.toString().replace('T',' ')}"></small>
+        <h2>To <b data-th-text="${flight.destination}"></b>
+            <small data-th-text="${flight.arrivalTime.toString().replace('T',' ')}"></small>
         </h2>
-        <h3>Flight <b th:text="${flight.flightNumber}"></b></h3>
-        <h3>Price <b th:text="${flight.price}"></b></h3>
-        <h3>Passenger <b th:text="${passenger.getDisplayName()}"></b></h3>
+        <h3>Flight <b data-th-text="${flight.flightNumber}"></b></h3>
+        <h3>Price <b data-th-text="${flight.price}"></b></h3>
+        <h3>Passenger <b data-th-text="${passenger.getDisplayName()}"></b></h3>
         <div class="form-group">
-            <label th:for="${#ids.next('price')}">Seat</label>
-            <select class="form-control" th:field="*{seat}">
-                <option th:each="seat:${seats}" th:value="${seat}" th:text="${seat}"></option>
+            <label data-th-for="${#ids.next('price')}">Seat</label>
+            <select class="form-control" data-th-field="*{seat}">
+                <option data-th-each="seat:${seats}" data-th-value="${seat}" data-th-text="${seat}"></option>
             </select>
         </div>
-        <input type="hidden" th:field="*{flightId}">
+        <input type="hidden" data-th-field="*{flightId}">
         <button class="btn btn-primary" type="submit">OK</button>
     </form>
 </div>

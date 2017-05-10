@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" layout:decorate="~{shared/layout}"
-      xmlns:th="http://www.w3.org/1999/xhtml"
-      xmlns:layout="http://www.w3.org/1999/xhtml">
+<html lang="en" data-layout-decorate="~{shared/layout}"
+>
 <head>
     <title>Manage Orders</title>
 </head>
 <body>
-<div layout:fragment="content">
+<div data-layout-fragment="content">
     <div class="page-header">
         <h1>Manage Orders</h1>
     </div>
@@ -19,14 +18,14 @@
         <th>Status</th>
         </thead>
         <tbody>
-        <tr th:each="order:${orders}">
-            <td th:text="${order.creationTime}"></td>
+        <tr data-th-each="order:${orders}">
+            <td data-th-text="${order.creationTime}"></td>
             <td>
-                <a th:text="${order.flightNumber}"
-                   th:href="'/manage/flights/'+${order.flightId}"></a></td>
-            <td th:text="${order.passengerName}"></td>
-            <td th:text="${order.price}"></td>
-            <td th:text="${order.status}"></td>
+                <a data-th-text="${order.flightNumber}"
+                   data-th-href="'/manage/flights/'+${order.flightId}"></a></td>
+            <td data-th-text="${order.passengerName}"></td>
+            <td data-th-text="${order.price}"></td>
+            <td data-th-text="${order.status}"></td>
         </tr>
         </tbody>
     </table>

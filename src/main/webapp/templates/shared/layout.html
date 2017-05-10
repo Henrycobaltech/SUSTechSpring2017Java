@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml"
-      xmlns:layout="http://www.w3.org/1999/xhtml">
+<html lang="en"
+>
 <head>
     <meta charset="UTF-8">
     <!-- Latest compiled and minified CSS -->
@@ -17,10 +17,15 @@
             crossorigin="anonymous"></script>
 </head>
 <body style="padding-top:70px;">
-<div th:replace="~{shared/header :: nav}"></div>
+<div data-th-replace="~{shared/header :: nav}"></div>
 <div class="container">
-    <div layout:fragment="content"></div>
+    <div data-th-if="${errorMessages!=null}" class="alert alert-danger" role="alert">
+        <ul>
+            <li data-th-each="msg:${errorMessages}" data-th-text="${msg}"></li>
+        </ul>
+    </div>
+    <div data-layout-fragment="content"></div>
 </div>
-<div th:replace="~{shared/footer :: copy}"></div>
+<div data-th-replace="~{shared/footer :: copy}"></div>
 </body>
 </html>

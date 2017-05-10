@@ -1,22 +1,21 @@
 <!DOCTYPE html>
-<html lang="en" layout:decorate="~{shared/layout}"
-      xmlns:th="http://www.w3.org/1999/xhtml"
-      xmlns:layout="http://www.w3.org/1999/xhtml">
+<html lang="en" data-layout-decorate="~{shared/layout}"
+>
 <head>
     <title>Flight Detail</title>
 </head>
 <body>
-<div layout:fragment="content">
+<div data-layout-fragment="content">
     <div class="page-header">
-        <h1 th:text="${'Flight '+model.flightNumber}"></h1>
+        <h1 data-th-text="${'Flight '+model.flightNumber}"></h1>
     </div>
     <div class="row">
-        <a class="col-md-1" th:href="@{'/manage/flights/'+${model.id}+'/publish'}"
-           th:if="${model.status.toString()}=='UNPUBLISHED'">Publish</a>
-        <a class="col-md-1" th:href="@{'/manage/flights/'+${model.id}+'/edit'}"
-           th:unless="(${model.status.toString()}=='TERMINATE') or (${model.status.toString()}=='DELETED')">Edit</a>
-        <a class="col-md-1" th:href="@{'/manage/flights/'+${model.id}+'/delete'}"
-           th:if="(${model.status.toString()}=='UNPUBLISHED') or (${model.status.toString()}=='TERMINATE')">Delete</a>
+        <a class="col-md-1" data-th-href="@{'/manage/flights/'+${model.id}+'/publish'}"
+           data-th-if="${model.status.toString()}=='UNPUBLISHED'">Publish</a>
+        <a class="col-md-1" data-th-href="@{'/manage/flights/'+${model.id}+'/edit'}"
+           data-th-unless="(${model.status.toString()}=='TERMINATE') or (${model.status.toString()}=='DELETED')">Edit</a>
+        <a class="col-md-1" data-th-href="@{'/manage/flights/'+${model.id}+'/delete'}"
+           data-th-if="(${model.status.toString()}=='UNPUBLISHED') or (${model.status.toString()}=='TERMINATE')">Delete</a>
     </div>
     <br/>
     <div>
@@ -32,30 +31,30 @@
                 <div class="row">
                     <div class="col-md-4">
                         <h2>City Info</h2>
-                        <h3>From&nbsp;<b th:text="${model.origin}"></b>&nbsp;To&nbsp;<b
-                                th:text="${model.destination}"></b></h3>
+                        <h3>From&nbsp;<b data-th-text="${model.origin}"></b>&nbsp;To&nbsp;<b
+                                data-th-text="${model.destination}"></b></h3>
                     </div>
                     <div class="col-md-4">
                         <h2>Departure</h2>
-                        <h3 th:text="${model.departureTime.toString().replace('T',' ')}"></h3>
+                        <h3 data-th-text="${model.departureTime.toString().replace('T',' ')}"></h3>
                     </div>
                     <div class="col-md-4">
                         <h2>Arrival</h2>
-                        <h3 th:text="${model.arrivalTime.toString().replace('T',' ')}"></h3>
+                        <h3 data-th-text="${model.arrivalTime.toString().replace('T',' ')}"></h3>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-4">
                         <h2>Price</h2>
-                        <h3 th:text="${model.price}"></h3>
+                        <h3 data-th-text="${model.price}"></h3>
                     </div>
                     <div class="col-md-4">
                         <h2>Capacity</h2>
-                        <h3 th:text="${model.capacity}"></h3>
+                        <h3 data-th-text="${model.capacity}"></h3>
                     </div>
                     <div class="col-md-4">
                         <h2>Status</h2>
-                        <h3 th:text="${model.status}"></h3>
+                        <h3 data-th-text="${model.status}"></h3>
                     </div>
                 </div>
             </div>
@@ -68,11 +67,11 @@
                     <th>Status</th>
                     </thead>
                     <tbody>
-                    <tr th:each="order:${model.orders}">
-                        <td th:text="${order.creationTime}"></td>
-                        <td th:text="${order.passengerName}"></td>
-                        <td th:text="${order.price}"></td>
-                        <td th:text="${order.status}"></td>
+                    <tr data-th-each="order:${model.orders}">
+                        <td data-th-text="${order.creationTime}"></td>
+                        <td data-th-text="${order.passengerName}"></td>
+                        <td data-th-text="${order.price}"></td>
+                        <td data-th-text="${order.status}"></td>
                     </tr>
                     </tbody>
                 </table>

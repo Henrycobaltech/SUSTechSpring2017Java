@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" layout:decorate="~{shared/layout}"
-      xmlns:th="http://www.w3.org/1999/xhtml"
-      xmlns:layout="http://www.w3.org/1999/xhtml">
+<html lang="en" data-layout-decorate="~{shared/layout}"
+>
 <head>
     <title>Manage Flights</title>
 </head>
 <body>
-<div layout:fragment="content">
+<div data-layout-fragment="content">
     <div class="page-header">
         <h1>All Flights</h1>
         <a href="/manage/flights/create">Create</a>
@@ -25,19 +24,19 @@
         <th>Action</th>
         </thead>
         <tbody>
-        <tr th:each="flight:${flights}">
-            <td th:text="${flight.flightNumber}"></td>
-            <td th:text="${flight.origin}"></td>
-            <td th:text="${flight.destination}"></td>
-            <td th:text="${flight.price}"></td>
-            <td th:text="${flight.departureTime}"></td>
-            <td th:text="${flight.arrivalTime}"></td>
-            <td th:text="${flight.capacity}"></td>
-            <td th:text="${flight.orderCount}"></td>
-            <td th:text="${flight.status}"></td>
+        <tr data-th-each="flight:${flights}">
+            <td data-th-text="${flight.flightNumber}"></td>
+            <td data-th-text="${flight.origin}"></td>
+            <td data-th-text="${flight.destination}"></td>
+            <td data-th-text="${flight.price}"></td>
+            <td data-th-text="${flight.departureTime}"></td>
+            <td data-th-text="${flight.arrivalTime}"></td>
+            <td data-th-text="${flight.capacity}"></td>
+            <td data-th-text="${flight.orderCount}"></td>
+            <td data-th-text="${flight.status}"></td>
 
             <td>
-                <a th:href="${'/manage/flights/'+flight.id+'/'}">Detail</a>
+                <a data-th-href="${'/manage/flights/'+flight.id+'/'}">Detail</a>
             </td>
         </tr>
         </tbody>

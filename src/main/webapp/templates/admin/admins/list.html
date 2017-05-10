@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" layout:decorate="~{shared/layout}"
-      xmlns:th="http://www.w3.org/1999/xhtml"
-      xmlns:layout="http://www.w3.org/1999/xhtml">
+<html lang="en" data-layout-decorate="~{shared/layout}"
+>
 <head>
     <title>Manage Administrators</title>
 </head>
 <body>
-<div layout:fragment="content">
+<div data-layout-fragment="content">
     <div class="page-header">
         <h1>All Administrators</h1>
         <a href="/manage/admins/create">Create</a>
@@ -17,11 +16,11 @@
         <th>Action</th>
         </thead>
         <tbody>
-        <tr th:each="admin:${admins}">
-            <td th:text="${admin.userName}"></td>
+        <tr data-th-each="admin:${admins}">
+            <td data-th-text="${admin.userName}"></td>
             <td>
-                <a th:href="${'/manage/admins/'+admin.id+'/edit/'}">Edit</a>
-                <!--<a th:href="${'/manage/admins/'+admin.id+'/delete/'}">Delete</a>-->
+                <a data-th-href="${'/manage/admins/'+admin.id+'/edit/'}">Edit</a>
+                <!--<a data-th-href="${'/manage/admins/'+admin.id+'/delete/'}">Delete</a>-->
             </td>
         </tr>
         </tbody>
