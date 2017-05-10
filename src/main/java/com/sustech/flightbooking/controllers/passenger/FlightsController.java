@@ -38,29 +38,7 @@ public class FlightsController extends ControllerBase {
         this.orderRepository = orderRepository;
     }
 
-    @GetMapping("")
-    public ModelAndView showAvailableFlights() {
-        List<AvailableFlightListViewModel> availableFlights = flightRepository.findAll().stream()
-                .filter(flight -> flightService.getStatus(flight) == FlightStatus.AVAILABLE)
-                .map(flight -> {
-                    AvailableFlightListViewModel vm = new AvailableFlightListViewModel();
 
-                    vm.setId(flight.getId());
-                    vm.setFlightNumber(flight.getFlightNumber());
-                    vm.setPrice(flight.getPrice());
-                    vm.setOrigin(flight.getOrigin());
-                    vm.setDestination(flight.getDestination());
-                    vm.setDepartureTime(flight.getDepartureTime());
-                    vm.setArrivalTime(flight.getArrivalTime());
-                    vm.setRemainingSeatsCount(flight.getCapacity() - flightService.getOrders(flight).size());
-
-                    return vm;
-                })
-                .collect(Collectors.toList());
-        ModelAndView modelAndView = page("passenger/flights/list");
-        modelAndView.getModelMap().put("flights", availableFlights);
-        return modelAndView;
-    }
 
     @GetMapping("book/{id}")
     public ModelAndView bookPage(@PathVariable UUID id) {

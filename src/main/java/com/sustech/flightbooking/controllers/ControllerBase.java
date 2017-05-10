@@ -54,7 +54,7 @@ public abstract class ControllerBase {
     }
 
     protected ModelAndView pageWithErrorMessages(String viewName, Object viewModel, List<String> errorMessages) {
-        ModelAndView modelAndView = pageWithViewModel("admin/admins/edit", viewModel);
+        ModelAndView modelAndView = pageWithViewModel(viewName, viewModel);
         modelAndView.getModelMap().put("errorMessages", errorMessages);
         return modelAndView;
     }

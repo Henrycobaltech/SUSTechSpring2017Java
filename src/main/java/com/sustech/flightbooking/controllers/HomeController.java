@@ -1,12 +1,16 @@
 package com.sustech.flightbooking.controllers;
 
+import com.sustech.flightbooking.domainmodel.FlightStatus;
 import com.sustech.flightbooking.domainmodel.Passenger;
 import com.sustech.flightbooking.infrastructure.FlightBookingAuthenticationToken;
+import com.sustech.flightbooking.persistence.FlightRepository;
 import com.sustech.flightbooking.persistence.PassengerRepository;
+import com.sustech.flightbooking.services.FlightService;
 import com.sustech.flightbooking.services.IdentityService;
 import com.sustech.flightbooking.viewmodel.LoginViewModel;
 import com.sustech.flightbooking.viewmodel.PassengerEditModelViewModel;
 import com.sustech.flightbooking.viewmodel.ViewModelValidator;
+import com.sustech.flightbooking.viewmodel.passenger.flight.AvailableFlightListViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/")
@@ -21,12 +26,17 @@ public class HomeController extends ControllerBase {
 
     private final IdentityService identityService;
     private final PassengerRepository passengerRepository;
+    private final FlightRepository flightRepository;
+    private final FlightService flightService;
 
 
     @Autowired
-    public HomeController(IdentityService identityService, PassengerRepository passengerRepository) {
+    public HomeController(IdentityService identityService, PassengerRepository passengerRepository,
+                          FlightRepository flightRepository, FlightService flightService) {
         this.identityService = identityService;
         this.passengerRepository = passengerRepository;
+        this.flightRepository = flightRepository;
+        this.flightService = flightService;
     }
 
 
@@ -39,6 +49,9 @@ public class HomeController extends ControllerBase {
     public ModelAndView loginPage(@RequestParam(value = "returnUri", required = false) String returnUri) {
         LoginViewModel viewModel = new LoginViewModel();
         viewModel.setReturnUri(returnUri);
+        if (identityService.getCurrentUser() != null && !returnUri.isEmpty()) {
+            return pageWithErrorMessages("login", viewModel, errorMessages("You may not have permission accessing that page."));
+        }
         return pageWithViewModel("login", viewModel);
     }
 
@@ -93,5 +106,29 @@ public class HomeController extends ControllerBase {
 
         passengerRepository.save(passenger);
         return redirect("/login");
+    }
+
+    @GetMapping("flights")
+    public ModelAndView showAvailableFlights() {
+        List<AvailableFlightListViewModel> availableFlights = flightRepository.findAll().stream()
+                .filter(flight -> flightService.getStatus(flight) == FlightStatus.AVAILABLE)
+                .map(flight -> {
+                    AvailableFlightListViewModel vm = new AvailableFlightListViewModel();
+
+                    vm.setId(flight.getId());
+                    vm.setFlightNumber(flight.getFlightNumber());
+                    vm.setPrice(flight.getPrice());
+                    vm.setOrigin(flight.getOrigin());
+                    vm.setDestination(flight.getDestination());
+                    vm.setDepartureTime(flight.getDepartureTime());
+                    vm.setArrivalTime(flight.getArrivalTime());
+                    vm.setRemainingSeatsCount(flight.getCapacity() - flightService.getOrders(flight).size());
+
+                    return vm;
+                })
+                .collect(Collectors.toList());
+        ModelAndView modelAndView = page("availableFlights");
+        modelAndView.getModelMap().put("flights", availableFlights);
+        return modelAndView;
     }
 }
