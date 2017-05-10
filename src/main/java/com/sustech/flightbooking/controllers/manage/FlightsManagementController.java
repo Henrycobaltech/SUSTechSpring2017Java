@@ -6,18 +6,16 @@ import com.sustech.flightbooking.domainmodel.Flight;
 import com.sustech.flightbooking.domainmodel.FlightStatus;
 import com.sustech.flightbooking.persistence.FlightRepository;
 import com.sustech.flightbooking.services.FlightService;
-import com.sustech.flightbooking.services.OrderService;
 import com.sustech.flightbooking.viewmodel.manage.OrderAdminViewModel;
 import com.sustech.flightbooking.viewmodel.manage.flights.CreateEditFlightViewModel;
-import com.sustech.flightbooking.viewmodel.manage.flights.FlightEditViewModel;
 import com.sustech.flightbooking.viewmodel.manage.flights.FlightDetailViewModel;
+import com.sustech.flightbooking.viewmodel.manage.flights.FlightEditViewModel;
 import com.sustech.flightbooking.viewmodel.manage.flights.FlightListViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -28,13 +26,12 @@ public class FlightsManagementController extends ControllerBase {
 
     private final FlightRepository flightRepository;
     private final FlightService flightService;
-    private final OrderService orderService;
 
     @Autowired
-    public FlightsManagementController(FlightRepository flightRepository, FlightService flightService, OrderService orderService) {
+    public FlightsManagementController(FlightRepository flightRepository,
+                                       FlightService flightService) {
         this.flightRepository = flightRepository;
         this.flightService = flightService;
-        this.orderService = orderService;
     }
 
 
@@ -81,25 +78,36 @@ public class FlightsManagementController extends ControllerBase {
             return notFound();
         }
         if (flightService.getStatus(flight) == FlightStatus.UNPUBLISHED) {
-            CreateEditFlightViewModel vm = new CreateEditFlightViewModel();
-            vm.setFlightNumber(flight.getFlightNumber());
-            vm.setOrigin(flight.getOrigin());
-            vm.setDestination(flight.getDestination());
-            vm.setPrice(flight.getPrice());
-            vm.setCapacity(flight.getCapacity());
-            vm.setDepartureTime(flight.getDepartureTime());
-            vm.setArrivalTime(flight.getArrivalTime());
-            ModelAndView modelAndView = pageWithViewModel("admin/flights/prepub-edit", vm);
-            modelAndView.getModelMap().put("flightId", flight.getId());
-            return modelAndView;
+            return prePublishEditPage(flight);
+        } else if (flightService.getStatus(flight) != FlightStatus.AVAILABLE
+                || flightService.getStatus(flight) != FlightStatus.FULL) {
+            return editPage(flight);
         } else {
-            FlightEditViewModel vm = new FlightEditViewModel();
-            vm.setCapacity(flight.getCapacity());
-            vm.setPrice(flight.getPrice());
-            ModelAndView modelAndView = pageWithViewModel("admin/flights/edit", vm);
-            modelAndView.getModelMap().put("flightId", flight.getId());
-            return modelAndView;
+            return notFound();
         }
+    }
+
+    private ModelAndView editPage(Flight flight) {
+        FlightEditViewModel vm = new FlightEditViewModel();
+        vm.setCapacity(flight.getCapacity());
+        vm.setPrice(flight.getPrice());
+        ModelAndView modelAndView = pageWithViewModel("admin/flights/edit", vm);
+        modelAndView.getModelMap().put("flightId", flight.getId());
+        return modelAndView;
+    }
+
+    private ModelAndView prePublishEditPage(Flight flight) {
+        CreateEditFlightViewModel vm = new CreateEditFlightViewModel();
+        vm.setFlightNumber(flight.getFlightNumber());
+        vm.setOrigin(flight.getOrigin());
+        vm.setDestination(flight.getDestination());
+        vm.setPrice(flight.getPrice());
+        vm.setCapacity(flight.getCapacity());
+        vm.setDepartureTime(flight.getDepartureTime());
+        vm.setArrivalTime(flight.getArrivalTime());
+        ModelAndView modelAndView = pageWithViewModel("admin/flights/prepub-edit", vm);
+        modelAndView.getModelMap().put("flightId", flight.getId());
+        return modelAndView;
     }
 
     @PostMapping("{id}/prepubupdate")
@@ -139,9 +147,6 @@ public class FlightsManagementController extends ControllerBase {
                 model.getArrivalTime(),
                 model.getCapacity());
         List<String> errorMessages = flightService.validate(flight);
-        if (!model.getDepartureTime().isAfter(LocalDateTime.now().plusHours(2))) {
-            errorMessages.add("Departure time must at least 2 hours after.");
-        }
         if (errorMessages.size() > 0) {
             //show error message
         }

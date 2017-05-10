@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-public class ControllerBase {
+public abstract class ControllerBase {
 
     public ModelAndView page(String viewName) {
         return new ModelAndView(viewName);
