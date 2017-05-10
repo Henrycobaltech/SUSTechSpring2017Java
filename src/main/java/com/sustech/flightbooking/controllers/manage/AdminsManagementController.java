@@ -3,13 +3,14 @@ package com.sustech.flightbooking.controllers.manage;
 import com.sustech.flightbooking.controllers.ControllerBase;
 import com.sustech.flightbooking.domainmodel.Administrator;
 import com.sustech.flightbooking.persistence.AdministratorsRepository;
-import com.sustech.flightbooking.viewmodel.manage.admins.CreateAdminViewModel;
-import com.sustech.flightbooking.viewmodel.manage.admins.EditAdminViewModel;
+import com.sustech.flightbooking.viewmodel.ViewModelValidator;
+import com.sustech.flightbooking.viewmodel.manage.admins.AdminEditViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -33,7 +34,7 @@ public class AdminsManagementController extends ControllerBase {
     @GetMapping("create")
     public ModelAndView createPage() {
         return pageWithViewModel("admin/admins/create",
-                new CreateAdminViewModel());
+                new AdminEditViewModel());
     }
 
     @GetMapping("{id}/edit")
@@ -42,7 +43,7 @@ public class AdminsManagementController extends ControllerBase {
         if (admin == null) {
             return notFound();
         } else {
-            EditAdminViewModel vm = new EditAdminViewModel();
+            AdminEditViewModel vm = new AdminEditViewModel();
             vm.setUserName(admin.getUserName());
 
             ModelAndView modelAndView = pageWithViewModel("admin/admins/edit", vm);
@@ -52,26 +53,36 @@ public class AdminsManagementController extends ControllerBase {
     }
 
     @PostMapping("create")
-    public ModelAndView create(@ModelAttribute CreateAdminViewModel model) {
-        Administrator admin = new Administrator(UUID.randomUUID());
-        if (!model.getPassword().equals(model.getConfirmPassword())) {
-            // password does not match
+    public ModelAndView create(@ModelAttribute AdminEditViewModel model) {
+        List<String> errorMessages = ViewModelValidator.validate(model);
+        if (adminsRepository.findByUserName(model.getUserName()) != null) {
+            errorMessages.add("User name already exists.");
         }
+        if (errorMessages.size() > 0) {
+            return pageWithErrorMessages("admin/admins/create", model, errorMessages);
+        }
+        Administrator admin = new Administrator(UUID.randomUUID());
         admin.setUserName(model.getUserName());
         admin.setPassword(model.getPassword());
-
         adminsRepository.save(admin);
         return redirect("/manage/admins");
     }
 
     @PostMapping("{id}/update")
-    public ModelAndView update(@ModelAttribute EditAdminViewModel model, @PathVariable UUID id) {
+    public ModelAndView update(@ModelAttribute AdminEditViewModel model, @PathVariable UUID id) {
         Administrator admin = adminsRepository.findById(id);
         if (admin == null) {
             return notFound();
         }
+        List<String> errorMessages = ViewModelValidator.validate(model);
+        if (!adminsRepository.findByUserName(model.getUserName()).equals(admin)) {
+            errorMessages.add("User name already exists.");
+        }
+        if (errorMessages.size() > 0) {
+            return pageWithErrorMessages("admin/admins/edit", model, errorMessages);
+        }
         admin.setUserName(model.getUserName());
-
+        admin.setPassword(model.getPassword());
         adminsRepository.save(admin);
         return redirect("/manage/admins");
     }

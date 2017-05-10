@@ -5,7 +5,7 @@ import com.sustech.flightbooking.infrastructure.FlightBookingAuthenticationToken
 import com.sustech.flightbooking.persistence.PassengerRepository;
 import com.sustech.flightbooking.services.IdentityService;
 import com.sustech.flightbooking.viewmodel.LoginViewModel;
-import com.sustech.flightbooking.viewmodel.RegisterPassengerViewModel;
+import com.sustech.flightbooking.viewmodel.PassengerEditModelViewModel;
 import com.sustech.flightbooking.viewmodel.ViewModelValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -53,9 +53,7 @@ public class HomeController extends ControllerBase {
         }
         //clear password
         model.setPassword("");
-        ModelAndView modelAndView = pageWithViewModel("login", model);
-        modelAndView.getModelMap().put("errorMessages", errorMessages("Invalid user name or password"));
-        return modelAndView;
+        return pageWithErrorMessages("login", model, errorMessages("Invalid user name or password"));
     }
 
     @GetMapping("/logout")
@@ -72,11 +70,11 @@ public class HomeController extends ControllerBase {
     @GetMapping("register")
     public ModelAndView registerPage() {
         return pageWithViewModel("register",
-                new RegisterPassengerViewModel());
+                new PassengerEditModelViewModel());
     }
 
     @PostMapping("register")
-    public ModelAndView register(@ModelAttribute RegisterPassengerViewModel model) {
+    public ModelAndView register(@ModelAttribute PassengerEditModelViewModel model) {
         List<String> errorMessages = ViewModelValidator.validate(model);
         if (passengerRepository.findByUserName(model.getUserName()) != null) {
             errorMessages.add("User name already exists.");
@@ -85,9 +83,7 @@ public class HomeController extends ControllerBase {
             errorMessages.add("ID card is already registered.");
         }
         if (errorMessages.size() > 0) {
-            ModelAndView modelAndView = pageWithViewModel("register", model);
-            modelAndView.getModelMap().put("errorMessages", errorMessages);
-            return modelAndView;
+            return pageWithErrorMessages("register", model, errorMessages);
         }
         Passenger passenger = new Passenger(UUID.randomUUID());
 

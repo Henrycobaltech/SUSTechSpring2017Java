@@ -11,45 +11,51 @@ import java.util.List;
 
 public abstract class ControllerBase {
 
-    public ModelAndView page(String viewName) {
+    protected ModelAndView page(String viewName) {
         return new ModelAndView(viewName);
     }
 
-    public ModelAndView redirect(String url) {
+    protected ModelAndView redirect(String url) {
         RedirectView redirectView = new RedirectView(url);
         redirectView.setExposeModelAttributes(false);
         return new ModelAndView(redirectView);
     }
 
-    public ModelAndView notFound() {
+    protected ModelAndView notFound() {
         return notFound("");
     }
 
-    public ModelAndView notFound(String errorMessage) {
+    protected ModelAndView notFound(String errorMessage) {
         ModelAndView modelAndView = new ModelAndView("/error/404");
         modelAndView.getModelMap().put("errorMessage", errorMessage);
         modelAndView.setStatus(HttpStatus.NOT_FOUND);
         return modelAndView;
     }
 
-    public ModelAndView badRequest() {
+    protected ModelAndView badRequest() {
         return badRequest("");
     }
 
-    public ModelAndView badRequest(String errorMessage) {
+    protected ModelAndView badRequest(String errorMessage) {
         ModelAndView modelAndView = new ModelAndView("/error/400");
         modelAndView.getModelMap().put("errorMessage", errorMessage);
         modelAndView.setStatus(HttpStatus.BAD_REQUEST);
         return modelAndView;
     }
 
-    public ModelAndView pageWithViewModel(String viewName, Object viewModel) {
+    protected ModelAndView pageWithViewModel(String viewName, Object viewModel) {
         ModelAndView modelAndView = page(viewName);
         modelAndView.getModelMap().put("model", viewModel);
         return modelAndView;
     }
 
-    public List<String> errorMessages(String... messages) {
+    protected List<String> errorMessages(String... messages) {
         return Arrays.asList(messages);
+    }
+
+    protected ModelAndView pageWithErrorMessages(String viewName, Object viewModel, List<String> errorMessages) {
+        ModelAndView modelAndView = pageWithViewModel("admin/admins/edit", viewModel);
+        modelAndView.getModelMap().put("errorMessages", errorMessages);
+        return modelAndView;
     }
 }
