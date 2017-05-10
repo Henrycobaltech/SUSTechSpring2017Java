@@ -3,14 +3,14 @@
       xmlns:th="http://www.w3.org/1999/xhtml"
       xmlns:layout="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Payment</title>
+    <title>Cancel Order</title>
 </head>
 <body>
 <div layout:fragment="content">
     <div class="page-header">
-        <h1>Payment</h1>
+        <h1>Cancel Order</h1>
     </div>
-    <form layout:fragment="form" class="col-md-6" action="#" th:action="@{'/passenger/orders/'+${orderId}+'/pay'}"
+    <form layout:fragment="form" class="col-md-6" action="#" th:action="@{'/passenger/orders/'+${orderId}+'/cancel'}"
           method="post">
         <h2>From <b th:text="${flight.origin}"></b>
             <small th:text="${flight.departureTime.toString().replace('T',' ')}"></small>
@@ -23,7 +23,7 @@
         <h3>Passenger <b th:text="${passenger.getDisplayName()}"></b></h3>
         <h3>Seat <b th:text="${seat}"></b></h3>
         <br/>
-        <button class="btn btn-primary" type="submit">Buy Buy Buy</button>
+        <button class="btn btn-primary" type="submit">Cancel</button>
     </form>
 </div>
 </body>

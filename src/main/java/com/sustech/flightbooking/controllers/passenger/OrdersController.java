@@ -56,6 +56,7 @@ public class OrdersController extends ControllerBase {
         }
         ModelAndView modelAndView = page("passenger/orders/pay");
         ModelMap modelMap = modelAndView.getModelMap();
+        modelMap.put("orderId", order.getId());
         modelMap.put("flight", order.getFlight());
         modelMap.put("passenger", order.getPassenger());
         modelMap.put("seat", order.getSeat());
@@ -74,4 +75,35 @@ public class OrdersController extends ControllerBase {
         orderRepository.save(order);
         return redirect("/passenger/orders");
     }
+
+    @GetMapping("{id}/cancel")
+    public ModelAndView cancelPage(@PathVariable UUID id) {
+        Order order = orderRepository.findById(id);
+        if (order == null ||
+                order.getStatus() != OrderStatus.PAID
+                || !order.getPassenger().equals(identityService.getCurrentUser())) {
+            return notFound();
+        }
+        ModelAndView modelAndView = page("passenger/orders/cancel");
+        ModelMap modelMap = modelAndView.getModelMap();
+        modelMap.put("orderId", order.getId());
+        modelMap.put("flight", order.getFlight());
+        modelMap.put("passenger", order.getPassenger());
+        modelMap.put("seat", order.getSeat());
+        return modelAndView;
+    }
+
+    @PostMapping("{id}/cancel")
+    public ModelAndView cancel(@PathVariable UUID id) {
+        Order order = orderRepository.findById(id);
+        if (order == null ||
+                order.getStatus() != OrderStatus.PAID
+                || !order.getPassenger().equals(identityService.getCurrentUser())) {
+            return notFound();
+        }
+        order.cancel();
+        orderRepository.save(order);
+        return redirect("/passenger/orders");
+    }
+
 }
