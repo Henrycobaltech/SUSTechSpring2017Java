@@ -60,7 +60,22 @@
                 </div>
             </div>
             <div role="tabpanel" class="tab-pane" id="orders">
-                orders
+                <table class="table table-hover">
+                    <thead>
+                    <th>Creation Time</th>
+                    <th>Passenger</th>
+                    <th>Price</th>
+                    <th>Status</th>
+                    </thead>
+                    <tbody>
+                    <tr th:each="order:${model.orders}">
+                        <td th:text="${order.creationTime}"></td>
+                        <td th:text="${order.passengerName}"></td>
+                        <td th:text="${order.price}"></td>
+                        <td th:text="${order.status}"></td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

@@ -13,6 +13,7 @@ public class OrderAdminViewModel {
     private UUID flightId;
     private LocalDateTime creationTime;
     private OrderStatus status;
+    private double price;
 
     public String getPassengerName() {
         return passengerName;
@@ -70,6 +71,15 @@ public class OrderAdminViewModel {
         vm.setPassengerName(order.getPassenger().getDisplayName());
         vm.setFlightId(order.getFlight().getId());
         vm.setFlightNumber(order.getFlight().getFlightNumber());
+        vm.setPrice(order.getPrice());
         return vm;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 }

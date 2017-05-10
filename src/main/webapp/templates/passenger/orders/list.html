@@ -37,7 +37,7 @@
                 <a class="col-md-1" th:href="@{'/passenger/orders/'+${order.id}+'/pay'}"
                    th:if="${order.status.toString()}=='UNPAID'">Pay</a>
                 <a class="col-md-1" th:href="@{'/passenger/orders/'+${order.id}+'/cancel'}"
-                   th:if="${order.status.toString()}=='PAID'">Cancel</a>
+                   th:if="(${order.status.toString()}=='PAID') or (${order.status.toString()}=='UNPAID')">Cancel</a>
             </td>
         </tr>
         </tbody>
