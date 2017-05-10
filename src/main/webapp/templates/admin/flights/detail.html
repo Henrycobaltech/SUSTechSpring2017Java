@@ -63,6 +63,7 @@
                     <thead>
                     <th>Creation Time</th>
                     <th>Passenger</th>
+                    <th>Seat</th>
                     <th>Price</th>
                     <th>Status</th>
                     </thead>
@@ -70,6 +71,7 @@
                     <tr data-th-each="order:${model.orders}">
                         <td data-th-text="${order.creationTime}"></td>
                         <td data-th-text="${order.passengerName}"></td>
+                        <td data-th-text="${order.seat}"></td>
                         <td data-th-text="${order.price}"></td>
                         <td data-th-text="${order.status}"></td>
                     </tr>

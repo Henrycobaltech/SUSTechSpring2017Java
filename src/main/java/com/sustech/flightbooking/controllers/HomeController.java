@@ -39,10 +39,19 @@ public class HomeController extends ControllerBase {
         this.flightService = flightService;
     }
 
-
     @GetMapping("/")
     public ModelAndView index() {
         return page("index");
+    }
+
+    @GetMapping("/manage")
+    public ModelAndView adminHome() {
+        return page("admin/index");
+    }
+
+    @GetMapping("/passenger")
+    public ModelAndView passengerHome() {
+        return page("passenger/index");
     }
 
     @GetMapping("/login")
@@ -73,11 +82,6 @@ public class HomeController extends ControllerBase {
     public ModelAndView logout() {
         identityService.logout();
         return redirect("/");
-    }
-
-    @GetMapping("/manage")
-    public ModelAndView adminIndex() {
-        return page("admin/index");
     }
 
     @GetMapping("register")
