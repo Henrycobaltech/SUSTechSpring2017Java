@@ -4,12 +4,14 @@ import com.sustech.flightbooking.controllers.ControllerBase;
 import com.sustech.flightbooking.domainmodel.Passenger;
 import com.sustech.flightbooking.persistence.PassengerRepository;
 import com.sustech.flightbooking.viewmodel.RegisterPassengerViewModel;
+import com.sustech.flightbooking.viewmodel.ViewModelValidator;
 import com.sustech.flightbooking.viewmodel.manage.passengers.EditPassengerViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -51,11 +53,15 @@ public class PassengerManagementController extends ControllerBase {
     @PostMapping("{id}/update")
     public ModelAndView update(@ModelAttribute RegisterPassengerViewModel model, @PathVariable UUID id) {
         Passenger passenger = passengerRepository.findById(id);
+        List<String> errorMessages = ViewModelValidator.validate(model);
         if (passenger == null) {
             return notFound();
         }
-        if (!model.getPassword().equals(model.getConfirmPassword())) {
-            // password does not match
+        if (!passengerRepository.findByUserName(model.getUserName()).equals(passenger)) {
+            errorMessages.add("User name already exists.");
+        }
+        if (!passengerRepository.findByIdCard(model.getIdentityNumber()).equals(passenger)) {
+            errorMessages.add("ID card is already registered.");
         }
         passenger.setUserName(model.getUserName());
         passenger.setDisplayName(model.getDisplayName());

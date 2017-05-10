@@ -6,7 +6,7 @@ import com.sustech.flightbooking.persistence.PassengerRepository;
 import com.sustech.flightbooking.services.IdentityService;
 import com.sustech.flightbooking.viewmodel.LoginViewModel;
 import com.sustech.flightbooking.viewmodel.RegisterPassengerViewModel;
-import com.sustech.flightbooking.viewmodel.ViewModelValidators;
+import com.sustech.flightbooking.viewmodel.ViewModelValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -77,7 +77,7 @@ public class HomeController extends ControllerBase {
 
     @PostMapping("register")
     public ModelAndView register(@ModelAttribute RegisterPassengerViewModel model) {
-        List<String> errorMessages = ViewModelValidators.validate(model);
+        List<String> errorMessages = ViewModelValidator.validate(model);
         if (passengerRepository.findByUserName(model.getUserName()) != null) {
             errorMessages.add("User name already exists.");
         }

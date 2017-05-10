@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class ViewModelValidators {
+public class ViewModelValidator {
 
     private static Pattern idCardRegex = Pattern.compile("^\\d{17}(\\d|X)$");
 
