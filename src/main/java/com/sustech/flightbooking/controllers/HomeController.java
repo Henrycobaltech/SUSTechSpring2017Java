@@ -4,6 +4,7 @@ import com.sustech.flightbooking.domainmodel.Flight;
 import com.sustech.flightbooking.domainmodel.FlightStatus;
 import com.sustech.flightbooking.domainmodel.Passenger;
 import com.sustech.flightbooking.infrastructure.FlightBookingAuthenticationToken;
+import com.sustech.flightbooking.persistence.AdministratorsRepository;
 import com.sustech.flightbooking.persistence.FlightRepository;
 import com.sustech.flightbooking.persistence.PassengerRepository;
 import com.sustech.flightbooking.services.FlightService;
@@ -18,10 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.text.spi.DateFormatProvider;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -35,15 +33,18 @@ public class HomeController extends ControllerBase {
     private final PassengerRepository passengerRepository;
     private final FlightRepository flightRepository;
     private final FlightService flightService;
+    private final AdministratorsRepository adminRepository;
 
 
     @Autowired
     public HomeController(IdentityService identityService, PassengerRepository passengerRepository,
-                          FlightRepository flightRepository, FlightService flightService) {
+                          FlightRepository flightRepository, FlightService flightService,
+                          AdministratorsRepository adminRepository) {
         this.identityService = identityService;
         this.passengerRepository = passengerRepository;
         this.flightRepository = flightRepository;
         this.flightService = flightService;
+        this.adminRepository = adminRepository;
     }
 
     @GetMapping("/")
@@ -101,6 +102,9 @@ public class HomeController extends ControllerBase {
     public ModelAndView register(@ModelAttribute PassengerEditModelViewModel model) {
         List<String> errorMessages = ViewModelValidator.validate(model);
         if (passengerRepository.findByUserName(model.getUserName()) != null) {
+            errorMessages.add("User name already exists.");
+        }
+        if (adminRepository.findByUserName(model.getUserName()) != null) {
             errorMessages.add("User name already exists.");
         }
         if (passengerRepository.findByIdCard(model.getIdentityNumber()) != null) {

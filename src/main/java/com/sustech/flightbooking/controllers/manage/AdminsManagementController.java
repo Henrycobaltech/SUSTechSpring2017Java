@@ -3,6 +3,7 @@ package com.sustech.flightbooking.controllers.manage;
 import com.sustech.flightbooking.controllers.ControllerBase;
 import com.sustech.flightbooking.domainmodel.Administrator;
 import com.sustech.flightbooking.persistence.AdministratorsRepository;
+import com.sustech.flightbooking.persistence.PassengerRepository;
 import com.sustech.flightbooking.viewmodel.ViewModelValidator;
 import com.sustech.flightbooking.viewmodel.manage.admins.AdminEditViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +19,12 @@ import java.util.UUID;
 public class AdminsManagementController extends ControllerBase {
 
     private final AdministratorsRepository adminsRepository;
+    private final PassengerRepository passengerRepository;
 
     @Autowired
-    public AdminsManagementController(AdministratorsRepository adminsRepository) {
+    public AdminsManagementController(AdministratorsRepository adminsRepository, PassengerRepository passengerRepository) {
         this.adminsRepository = adminsRepository;
+        this.passengerRepository = passengerRepository;
     }
 
     @GetMapping("")
@@ -56,6 +59,9 @@ public class AdminsManagementController extends ControllerBase {
     public ModelAndView create(@ModelAttribute AdminEditViewModel model) {
         List<String> errorMessages = ViewModelValidator.validate(model);
         if (adminsRepository.findByUserName(model.getUserName()) != null) {
+            errorMessages.add("User name already exists.");
+        }
+        if (passengerRepository.findByUserName(model.getUserName()) != null) {
             errorMessages.add("User name already exists.");
         }
         if (errorMessages.size() > 0) {
