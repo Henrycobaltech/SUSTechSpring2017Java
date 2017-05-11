@@ -31,7 +31,8 @@ public class FlightsController extends ControllerBase {
     private final OrderRepository orderRepository;
 
     @Autowired
-    public FlightsController(FlightRepository flightRepository, FlightService flightService, IdentityService identityService, OrderRepository orderRepository) {
+    public FlightsController(FlightRepository flightRepository, FlightService flightService,
+                             IdentityService identityService, OrderRepository orderRepository) {
         this.flightService = flightService;
         this.flightRepository = flightRepository;
         this.identityService = identityService;

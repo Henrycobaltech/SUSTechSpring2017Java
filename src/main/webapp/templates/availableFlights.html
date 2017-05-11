@@ -9,6 +9,28 @@
     <div class="page-header">
         <h1>Available Flights</h1>
     </div>
+    <form action="/flights" method="get">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <input id="city" name="city" type="text" class="form-control" placeholder="Search by city"
+                           data-th-value="${searchCity}"/>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Departure Date</span>
+                    <input id="date" name="date" type="date" class="form-control" data-th-value="${searchDate}"/>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-default" type="submit">
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    &nbsp;Search
+                </button>
+            </div>
+        </div>
+    </form>
     <table class="table table-hover">
         <thead>
         <th>Flight Number</th>

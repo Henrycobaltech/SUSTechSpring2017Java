@@ -1,5 +1,6 @@
 package com.sustech.flightbooking.controllers;
 
+import com.sustech.flightbooking.domainmodel.Flight;
 import com.sustech.flightbooking.domainmodel.FlightStatus;
 import com.sustech.flightbooking.domainmodel.Passenger;
 import com.sustech.flightbooking.infrastructure.FlightBookingAuthenticationToken;
@@ -12,13 +13,19 @@ import com.sustech.flightbooking.viewmodel.PassengerEditModelViewModel;
 import com.sustech.flightbooking.viewmodel.ViewModelValidator;
 import com.sustech.flightbooking.viewmodel.passenger.flight.AvailableFlightListViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.text.spi.DateFormatProvider;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Controller
 @RequestMapping("/")
@@ -113,26 +120,38 @@ public class HomeController extends ControllerBase {
     }
 
     @GetMapping("flights")
-    public ModelAndView showAvailableFlights() {
-        List<AvailableFlightListViewModel> availableFlights = flightRepository.findAll().stream()
-                .filter(flight -> flightService.getStatus(flight) == FlightStatus.AVAILABLE)
-                .map(flight -> {
-                    AvailableFlightListViewModel vm = new AvailableFlightListViewModel();
+    public ModelAndView showAvailableFlights(@RequestParam(value = "city", required = false) String city,
+                                             @RequestParam(value = "date", required = false)
+                                             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        Stream<Flight> flights = flightRepository.findAll().stream()
+                .filter(flight -> flightService.getStatus(flight) == FlightStatus.AVAILABLE);
+        if (!city.isEmpty()) {
+            flights = flights.filter(f -> f.getOrigin().toLowerCase().contains(city.toLowerCase())
+                    || f.getDestination().toLowerCase().contains(city.toLowerCase()));
+        }
+        if (date != null) {
+            flights = flights.filter(f -> f.getDepartureTime().toLocalDate().equals(date));
+        }
 
-                    vm.setId(flight.getId());
-                    vm.setFlightNumber(flight.getFlightNumber());
-                    vm.setPrice(flight.getPrice());
-                    vm.setOrigin(flight.getOrigin());
-                    vm.setDestination(flight.getDestination());
-                    vm.setDepartureTime(flight.getDepartureTime());
-                    vm.setArrivalTime(flight.getArrivalTime());
-                    vm.setRemainingSeatsCount(flight.getCapacity() - flightService.getOrders(flight).size());
+        List<AvailableFlightListViewModel> searchResult = flights.map(flight -> {
+            AvailableFlightListViewModel vm = new AvailableFlightListViewModel();
 
-                    return vm;
-                })
+            vm.setId(flight.getId());
+            vm.setFlightNumber(flight.getFlightNumber());
+            vm.setPrice(flight.getPrice());
+            vm.setOrigin(flight.getOrigin());
+            vm.setDestination(flight.getDestination());
+            vm.setDepartureTime(flight.getDepartureTime());
+            vm.setArrivalTime(flight.getArrivalTime());
+            vm.setRemainingSeatsCount(flight.getCapacity() - flightService.getOrders(flight).size());
+
+            return vm;
+        })
                 .collect(Collectors.toList());
         ModelAndView modelAndView = page("availableFlights");
-        modelAndView.getModelMap().put("flights", availableFlights);
+        modelAndView.getModelMap().put("flights", searchResult);
+        modelAndView.getModelMap().put("searchCity", city);
+        modelAndView.getModelMap().put("searchDate", date);
         return modelAndView;
     }
 }
