@@ -29,8 +29,8 @@
             <td data-th-text="${flight.origin}"></td>
             <td data-th-text="${flight.destination}"></td>
             <td data-th-text="${flight.price}"></td>
-            <td data-th-text="${flight.departureTime}"></td>
-            <td data-th-text="${flight.arrivalTime}"></td>
+            <td data-th-text="${flight.departureTime().toString().replace('T',' ')}"></td>
+            <td data-th-text="${flight.arrivalTime.toString().replace('T',' ')}"></td>
             <td data-th-text="${flight.capacity}"></td>
             <td data-th-text="${flight.orderCount}"></td>
             <td data-th-text="${flight.status}"></td>

@@ -11,10 +11,17 @@
     </div>
     <form action="/flights" method="get">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <div class="form-group">
                     <input id="city" name="city" type="text" class="form-control" placeholder="Search by city"
                            data-th-value="${searchCity}"/>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <input id="flightNumber" name="flightNumber" type="text" class="form-control"
+                           placeholder="Search by flight number"
+                           data-th-value="${searchFlightNumber}"/>
                 </div>
             </div>
             <div class="col-md-4">
@@ -23,10 +30,9 @@
                     <input id="date" name="date" type="date" class="form-control" data-th-value="${searchDate}"/>
                 </div>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-1">
                 <button class="btn btn-default" type="submit">
                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                    &nbsp;Search
                 </button>
             </div>
         </div>
@@ -48,8 +54,8 @@
             <td data-th-text="${flight.origin}"></td>
             <td data-th-text="${flight.destination}"></td>
             <td data-th-text="${flight.price}"></td>
-            <td data-th-text="${flight.departureTime}"></td>
-            <td data-th-text="${flight.arrivalTime}"></td>
+            <td data-th-text="${flight.departureTime.toString().replace('T',' ')}"></td>
+            <td data-th-text="${flight.arrivalTime.toString().replace('T',' ')}"></td>
             <td data-th-text="${flight.remainingSeatsCount}"></td>
 
             <td>

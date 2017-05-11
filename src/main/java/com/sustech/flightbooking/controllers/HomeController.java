@@ -121,13 +121,17 @@ public class HomeController extends ControllerBase {
 
     @GetMapping("flights")
     public ModelAndView showAvailableFlights(@RequestParam(value = "city", required = false) String city,
+                                             @RequestParam(value = "flightNumber", required = false) String flightNumber,
                                              @RequestParam(value = "date", required = false)
                                              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         Stream<Flight> flights = flightRepository.findAll().stream()
                 .filter(flight -> flightService.getStatus(flight) == FlightStatus.AVAILABLE);
-        if (!city.isEmpty()) {
+        if (city != null && !city.isEmpty()) {
             flights = flights.filter(f -> f.getOrigin().toLowerCase().contains(city.toLowerCase())
                     || f.getDestination().toLowerCase().contains(city.toLowerCase()));
+        }
+        if (flightNumber != null && !flightNumber.isEmpty()) {
+            flights = flights.filter(f -> f.getFlightNumber().toLowerCase().contains(flightNumber.toLowerCase()));
         }
         if (date != null) {
             flights = flights.filter(f -> f.getDepartureTime().toLocalDate().equals(date));
@@ -151,6 +155,7 @@ public class HomeController extends ControllerBase {
         ModelAndView modelAndView = page("availableFlights");
         modelAndView.getModelMap().put("flights", searchResult);
         modelAndView.getModelMap().put("searchCity", city);
+        modelAndView.getModelMap().put("searchFlightNumber", flightNumber);
         modelAndView.getModelMap().put("searchDate", date);
         return modelAndView;
     }
