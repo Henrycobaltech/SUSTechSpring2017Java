@@ -12,13 +12,16 @@ import com.sustech.flightbooking.viewmodel.manage.flights.FlightDetailViewModel;
 import com.sustech.flightbooking.viewmodel.manage.flights.FlightEditViewModel;
 import com.sustech.flightbooking.viewmodel.manage.flights.FlightListViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Controller
 @RequestMapping("manage/flights")
@@ -36,26 +39,42 @@ public class FlightsManagementController extends ControllerBase {
 
 
     @GetMapping("")
-    public ModelAndView showAll() {
+    public ModelAndView query(@RequestParam(value = "city", required = false) String city,
+                              @RequestParam(value = "flightNumber", required = false) String flightNumber,
+                              @RequestParam(value = "date", required = false)
+                              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         ModelAndView modelAndView = page("admin/flights/list");
-        List<FlightListViewModel> flightListViewModels = flightRepository.findAll().stream()
-                .filter(flight -> !flight.isDeleted())
-                .map(flight -> {
-                    FlightListViewModel vm = new FlightListViewModel();
+        Stream<Flight> flights = flightRepository.findAll().stream()
+                .filter(flight -> !flight.isDeleted());
 
-                    vm.setId(flight.getId());
-                    vm.setFlightNumber(flight.getFlightNumber());
-                    vm.setPrice(flight.getPrice());
-                    vm.setOrigin(flight.getOrigin());
-                    vm.setDestination(flight.getDestination());
-                    vm.setDepartureTime(flight.getDepartureTime());
-                    vm.setArrivalTime(flight.getArrivalTime());
-                    vm.setCapacity(flight.getCapacity());
-                    vm.setStatus(flightService.getStatus(flight));
-                    vm.setOrderCount(flightService.getOrders(flight).size());
-                    return vm;
-                })
-                .collect(Collectors.toList());
+        if (city != null && !city.isEmpty()) {
+            flights = flights.filter(f -> f.getOrigin().toLowerCase().contains(city.toLowerCase())
+                    || f.getDestination().toLowerCase().contains(city.toLowerCase()));
+        }
+        if (flightNumber != null && !flightNumber.isEmpty()) {
+            flights = flights.filter(f -> f.getFlightNumber().toLowerCase().contains(flightNumber.toLowerCase()));
+        }
+        if (date != null) {
+            flights = flights.filter(f -> f.getDepartureTime().toLocalDate().equals(date));
+        }
+        List<FlightListViewModel> flightListViewModels = flights.map(flight -> {
+            FlightListViewModel vm = new FlightListViewModel();
+
+            vm.setId(flight.getId());
+            vm.setFlightNumber(flight.getFlightNumber());
+            vm.setPrice(flight.getPrice());
+            vm.setOrigin(flight.getOrigin());
+            vm.setDestination(flight.getDestination());
+            vm.setDepartureTime(flight.getDepartureTime());
+            vm.setArrivalTime(flight.getArrivalTime());
+            vm.setCapacity(flight.getCapacity());
+            vm.setStatus(flightService.getStatus(flight));
+            vm.setOrderCount(flightService.getOrders(flight).size());
+            return vm;
+        }).collect(Collectors.toList());
+        modelAndView.getModelMap().put("searchCity", city);
+        modelAndView.getModelMap().put("searchFlightNumber", flightNumber);
+        modelAndView.getModelMap().put("searchDate", date);
         modelAndView.getModelMap().put("flights", flightListViewModels);
         return modelAndView;
     }
