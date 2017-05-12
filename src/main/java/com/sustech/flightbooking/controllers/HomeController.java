@@ -36,19 +36,17 @@ public class HomeController extends ControllerBase {
     private final PassengerRepository passengerRepository;
     private final FlightRepository flightRepository;
     private final FlightService flightService;
-    private final AdministratorsRepository adminRepository;
     private final UserService userService;
 
 
     @Autowired
     public HomeController(IdentityService identityService, PassengerRepository passengerRepository,
                           FlightRepository flightRepository, FlightService flightService,
-                          AdministratorsRepository adminRepository, UserService userService) {
+                          UserService userService) {
         this.identityService = identityService;
         this.passengerRepository = passengerRepository;
         this.flightRepository = flightRepository;
         this.flightService = flightService;
-        this.adminRepository = adminRepository;
         this.userService = userService;
     }
 
@@ -136,24 +134,27 @@ public class HomeController extends ControllerBase {
                 .filter(flight -> flightService.getStatus(flight) == FlightStatus.AVAILABLE);
         flights = flightService.searchFilter(flights, city, flightNumber, date);
 
-        List<AvailableFlightListViewModel> searchResult = flights.map(flight -> {
-            AvailableFlightListViewModel vm = new AvailableFlightListViewModel();
-
-            vm.setId(flight.getId());
-            vm.setFlightNumber(flight.getFlightNumber());
-            vm.setPrice(flight.getPrice());
-            vm.setOrigin(flight.getOrigin());
-            vm.setDestination(flight.getDestination());
-            vm.setDepartureTime(flight.getDepartureTime());
-            vm.setArrivalTime(flight.getArrivalTime());
-            vm.setRemainingSeatsCount(flight.getCapacity() - flightService.getOrders(flight).size());
-
-            return vm;
-        })
+        List<AvailableFlightListViewModel> searchResult = flights
+                .map(this::mapFlightToAvailableFlightListViewModel)
                 .collect(Collectors.toList());
         ModelAndView modelAndView = page("availableFlights");
         modelAndView.getModelMap().put("flights", searchResult);
         SearchInfos.addToModelAndView(modelAndView, city, flightNumber, date);
         return modelAndView;
+    }
+
+    private AvailableFlightListViewModel mapFlightToAvailableFlightListViewModel(Flight flight) {
+        AvailableFlightListViewModel vm = new AvailableFlightListViewModel();
+
+        vm.setId(flight.getId());
+        vm.setFlightNumber(flight.getFlightNumber());
+        vm.setPrice(flight.getPrice());
+        vm.setOrigin(flight.getOrigin());
+        vm.setDestination(flight.getDestination());
+        vm.setDepartureTime(flight.getDepartureTime());
+        vm.setArrivalTime(flight.getArrivalTime());
+        vm.setRemainingSeatsCount(flight.getCapacity() - flightService.getOrders(flight).size());
+
+        return vm;
     }
 }

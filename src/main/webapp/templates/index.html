@@ -9,7 +9,7 @@
     <div class="jumbotron">
         <h1>Welcome to Flight Booking System</h1>
         <p>After finishing this project, we find Java sucks.</p>
-        <a class="btn btn-large btn-success" href="/login">Login Now</a>
+        <a data-th-unless="${loggedIn}" class="btn btn-large btn-success" href="/login">Login Now</a>
     </div>
     <div class="row">
         <div class="col-md-4">

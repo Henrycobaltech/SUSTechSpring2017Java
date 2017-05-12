@@ -43,16 +43,20 @@ public class PassengerManagementController extends ControllerBase {
         if (passenger == null) {
             return notFound();
         } else {
-            EditPassengerViewModel vm = new EditPassengerViewModel();
-
-            vm.setDisplayName(passenger.getDisplayName());
-            vm.setUserName(passenger.getUserName());
-            vm.setIdentityNumber(passenger.getIdentityCardNumber());
-
+            EditPassengerViewModel vm = mapPassengerToEditModel(passenger);
             ModelAndView modelAndView = pageWithViewModel("admin/passengers/edit", vm);
             modelAndView.getModelMap().put("passengerId", passenger.getId());
             return modelAndView;
         }
+    }
+
+    private EditPassengerViewModel mapPassengerToEditModel(Passenger passenger) {
+        EditPassengerViewModel vm = new EditPassengerViewModel();
+
+        vm.setDisplayName(passenger.getDisplayName());
+        vm.setUserName(passenger.getUserName());
+        vm.setIdentityNumber(passenger.getIdentityCardNumber());
+        return vm;
     }
 
     @PostMapping("{id}/update")

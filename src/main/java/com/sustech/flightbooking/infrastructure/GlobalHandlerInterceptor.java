@@ -26,7 +26,7 @@ public class GlobalHandlerInterceptor extends HandlerInterceptorAdapter {
     public void postHandle(HttpServletRequest request, HttpServletResponse response,
                            Object handler, ModelAndView modelAndView)
             throws Exception {
-        if (modelAndView.hasView()) {
+        if (modelAndView != null && modelAndView.hasView()) {
             addUserInfo(modelAndView);
         }
         super.postHandle(request, response, handler, modelAndView);

@@ -49,24 +49,26 @@ public class FlightsManagementController extends ControllerBase {
         Stream<Flight> flights = flightRepository.findAll().stream()
                 .filter(flight -> !flight.isDeleted());
         flights = flightService.searchFilter(flights, city, flightNumber, date);
-        List<FlightListViewModel> flightListViewModels = flights.map(flight -> {
-            FlightListViewModel vm = new FlightListViewModel();
-
-            vm.setId(flight.getId());
-            vm.setFlightNumber(flight.getFlightNumber());
-            vm.setPrice(flight.getPrice());
-            vm.setOrigin(flight.getOrigin());
-            vm.setDestination(flight.getDestination());
-            vm.setDepartureTime(flight.getDepartureTime());
-            vm.setArrivalTime(flight.getArrivalTime());
-            vm.setCapacity(flight.getCapacity());
-            vm.setStatus(flightService.getStatus(flight));
-            vm.setOrderCount(flightService.getOrders(flight).size());
-            return vm;
-        }).collect(Collectors.toList());
+        List<FlightListViewModel> flightListViewModels = flights.map(this::mapFlightToViewModel)
+                .collect(Collectors.toList());
         SearchInfos.addToModelAndView(modelAndView, city, flightNumber, date);
         modelAndView.getModelMap().put("flights", flightListViewModels);
         return modelAndView;
+    }
+
+    private FlightListViewModel mapFlightToViewModel(Flight flight) {
+        FlightListViewModel vm = new FlightListViewModel();
+        vm.setId(flight.getId());
+        vm.setFlightNumber(flight.getFlightNumber());
+        vm.setPrice(flight.getPrice());
+        vm.setOrigin(flight.getOrigin());
+        vm.setDestination(flight.getDestination());
+        vm.setDepartureTime(flight.getDepartureTime());
+        vm.setArrivalTime(flight.getArrivalTime());
+        vm.setCapacity(flight.getCapacity());
+        vm.setStatus(flightService.getStatus(flight));
+        vm.setOrderCount(flightService.getOrders(flight).size());
+        return vm;
     }
 
     @GetMapping("create")
@@ -86,13 +88,14 @@ public class FlightsManagementController extends ControllerBase {
         if (flight == null) {
             return notFound();
         }
-        if (flightService.getStatus(flight) == FlightStatus.UNPUBLISHED) {
-            return prePublishEditPage(flight);
-        } else if (flightService.getStatus(flight) != FlightStatus.AVAILABLE
-                || flightService.getStatus(flight) != FlightStatus.FULL) {
-            return editPage(flight);
-        } else {
-            return notFound();
+        switch (flightService.getStatus(flight)) {
+            case UNPUBLISHED:
+                return prePublishEditPage(flight);
+            case FULL:
+            case AVAILABLE:
+                return editPage(flight);
+            default:
+                return notFound();
         }
     }
 
@@ -106,6 +109,13 @@ public class FlightsManagementController extends ControllerBase {
     }
 
     private ModelAndView prePublishEditPage(Flight flight) {
+        CreateEditFlightViewModel vm = mapFlightToCreateEditModel(flight);
+        ModelAndView modelAndView = pageWithViewModel("admin/flights/prepub-edit", vm);
+        modelAndView.getModelMap().put("flightId", flight.getId());
+        return modelAndView;
+    }
+
+    private CreateEditFlightViewModel mapFlightToCreateEditModel(Flight flight) {
         CreateEditFlightViewModel vm = new CreateEditFlightViewModel();
         vm.setFlightNumber(flight.getFlightNumber());
         vm.setOrigin(flight.getOrigin());
@@ -114,9 +124,7 @@ public class FlightsManagementController extends ControllerBase {
         vm.setCapacity(flight.getCapacity());
         vm.setDepartureTime(flight.getDepartureTime());
         vm.setArrivalTime(flight.getArrivalTime());
-        ModelAndView modelAndView = pageWithViewModel("admin/flights/prepub-edit", vm);
-        modelAndView.getModelMap().put("flightId", flight.getId());
-        return modelAndView;
+        return vm;
     }
 
     @PostMapping("{id}/prepubupdate")
@@ -149,16 +157,8 @@ public class FlightsManagementController extends ControllerBase {
     }
 
     private ModelAndView createOrUpdateFlight(CreateEditFlightViewModel model, UUID id, String viewName) {
-        Flight flight = new Flight(id,
-                model.getFlightNumber(),
-                model.getPrice(),
-                model.getOrigin(),
-                model.getDestination(),
-                model.getDepartureTime(),
-                model.getArrivalTime(),
-                model.getCapacity());
+        Flight flight = mapCreateEditModelToFlight(model, id);
         List<String> errorMessages = flightService.validate(flight);
-
         return ErrorMessageHandler.fromViewModel(model, viewName)
                 .addErrorMessages(errorMessages)
                 .onSuccess(() -> {
@@ -171,17 +171,31 @@ public class FlightsManagementController extends ControllerBase {
                 .result();
     }
 
+    private Flight mapCreateEditModelToFlight(CreateEditFlightViewModel model, UUID id) {
+        return new Flight(id,
+                model.getFlightNumber(),
+                model.getPrice(),
+                model.getOrigin(),
+                model.getDestination(),
+                model.getDepartureTime(),
+                model.getArrivalTime(),
+                model.getCapacity());
+    }
 
-    //not implemented yet
     @GetMapping("{id}")
     public ModelAndView detail(@PathVariable UUID id) {
         Flight flight = flightRepository.findById(id);
         if (flight == null) {
             return notFound();
         }
+        FlightDetailViewModel vm = mapFlightToDetailViewModel(flight);
+        return pageWithViewModel("admin/flights/detail", vm);
+    }
+
+    private FlightDetailViewModel mapFlightToDetailViewModel(Flight flight) {
         FlightDetailViewModel vm = new FlightDetailViewModel();
 
-        vm.setId(id);
+        vm.setId(flight.getId());
         vm.setFlightNumber(flight.getFlightNumber());
         vm.setPrice(flight.getPrice());
         vm.setOrigin(flight.getOrigin());
@@ -196,8 +210,7 @@ public class FlightsManagementController extends ControllerBase {
                 .map(OrderAdminViewModel::createFromDomainModel)
                 .collect(Collectors.toList());
         vm.setOrders(orders);
-
-        return pageWithViewModel("admin/flights/detail", vm);
+        return vm;
     }
 
 
@@ -221,13 +234,15 @@ public class FlightsManagementController extends ControllerBase {
         if (flight == null) {
             return notFound();
         }
-        FlightStatus status = flightService.getStatus(flight);
-        if (status != FlightStatus.UNPUBLISHED
-                && status != FlightStatus.TERMINATE) {
-            return badRequest("Current state does not allow deleting.");
+        switch (flightService.getStatus(flight)) {
+            case UNPUBLISHED:
+            case TERMINATE:
+                flight.delete();
+                flightRepository.save(flight);
+                return redirect("/manage/flights");
+            default:
+                return badRequest("Current state does not allow deleting.");
         }
-        flight.delete();
-        flightRepository.save(flight);
-        return redirect("/manage/flights");
+
     }
 }

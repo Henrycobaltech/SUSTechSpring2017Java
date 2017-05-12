@@ -2,7 +2,6 @@ package com.sustech.flightbooking.controllers.manage;
 
 import com.sustech.flightbooking.controllers.ControllerBase;
 import com.sustech.flightbooking.persistence.OrderRepository;
-import com.sustech.flightbooking.services.OrderService;
 import com.sustech.flightbooking.viewmodel.manage.OrderAdminViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

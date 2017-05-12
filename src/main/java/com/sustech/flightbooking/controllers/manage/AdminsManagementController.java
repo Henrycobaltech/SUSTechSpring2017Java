@@ -2,8 +2,9 @@ package com.sustech.flightbooking.controllers.manage;
 
 import com.sustech.flightbooking.controllers.ControllerBase;
 import com.sustech.flightbooking.domainmodel.Administrator;
+import com.sustech.flightbooking.misc.responseHandling.ErrorMessageHandler;
 import com.sustech.flightbooking.persistence.AdministratorsRepository;
-import com.sustech.flightbooking.persistence.PassengerRepository;
+import com.sustech.flightbooking.services.UserService;
 import com.sustech.flightbooking.viewmodel.ViewModelValidator;
 import com.sustech.flightbooking.viewmodel.manage.admins.AdminEditViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +20,13 @@ import java.util.UUID;
 public class AdminsManagementController extends ControllerBase {
 
     private final AdministratorsRepository adminsRepository;
-    private final PassengerRepository passengerRepository;
+    private final UserService userService;
 
     @Autowired
-    public AdminsManagementController(AdministratorsRepository adminsRepository, PassengerRepository passengerRepository) {
+    public AdminsManagementController(AdministratorsRepository adminsRepository,
+                                      UserService userService) {
         this.adminsRepository = adminsRepository;
-        this.passengerRepository = passengerRepository;
+        this.userService = userService;
     }
 
     @GetMapping("")
@@ -57,39 +59,33 @@ public class AdminsManagementController extends ControllerBase {
 
     @PostMapping("create")
     public ModelAndView create(@ModelAttribute AdminEditViewModel model) {
-        List<String> errorMessages = ViewModelValidator.validate(model);
-        if (adminsRepository.findByUserName(model.getUserName()) != null) {
-            errorMessages.add("User name already exists.");
-        }
-        if (passengerRepository.findByUserName(model.getUserName()) != null) {
-            errorMessages.add("User name already exists.");
-        }
-        if (errorMessages.size() > 0) {
-            return pageWithErrorMessages("admin/admins/create", model, errorMessages);
-        }
-        Administrator admin = new Administrator(UUID.randomUUID());
-        admin.setUserName(model.getUserName());
-        admin.setPassword(model.getPassword());
-        adminsRepository.save(admin);
-        return redirect("/manage/admins");
+        return createOrUpdate(model, UUID.randomUUID(), "admin/admins/create");
     }
 
     @PostMapping("{id}/update")
     public ModelAndView update(@ModelAttribute AdminEditViewModel model, @PathVariable UUID id) {
-        Administrator admin = adminsRepository.findById(id);
-        if (admin == null) {
+        if (adminsRepository.findById(id) == null) {
             return notFound();
         }
+        return createOrUpdate(model, id, "admin/admins/edit");
+    }
+
+    private ModelAndView createOrUpdate(@ModelAttribute AdminEditViewModel model, UUID id, String viewName) {
         List<String> errorMessages = ViewModelValidator.validate(model);
-        if (!adminsRepository.findByUserName(model.getUserName()).equals(admin)) {
+        Administrator admin = adminsRepository.findById(id);
+        admin = admin != null ? admin : new Administrator(id);
+        if (!userService.isUserNameAvailableFor(admin, model.getUserName())) {
             errorMessages.add("User name already exists.");
         }
-        if (errorMessages.size() > 0) {
-            return pageWithErrorMessages("admin/admins/edit", model, errorMessages);
-        }
-        admin.setUserName(model.getUserName());
-        admin.setPassword(model.getPassword());
-        adminsRepository.save(admin);
-        return redirect("/manage/admins");
+        Administrator finalAdmin = admin;
+        return ErrorMessageHandler.fromViewModel(model, viewName)
+                .addErrorMessages(errorMessages)
+                .onSuccess(() -> {
+                    finalAdmin.setUserName(model.getUserName());
+                    finalAdmin.setPassword(model.getPassword());
+                    adminsRepository.save(finalAdmin);
+                    return redirect("/manage/admins");
+                })
+                .result();
     }
 }
