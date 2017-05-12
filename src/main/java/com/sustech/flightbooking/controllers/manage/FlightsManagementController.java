@@ -4,6 +4,8 @@ package com.sustech.flightbooking.controllers.manage;
 import com.sustech.flightbooking.controllers.ControllerBase;
 import com.sustech.flightbooking.domainmodel.Flight;
 import com.sustech.flightbooking.domainmodel.FlightStatus;
+import com.sustech.flightbooking.misc.SearchInfos;
+import com.sustech.flightbooking.misc.responseHandling.ErrorMessageHandler;
 import com.sustech.flightbooking.persistence.FlightRepository;
 import com.sustech.flightbooking.services.FlightService;
 import com.sustech.flightbooking.viewmodel.manage.OrderAdminViewModel;
@@ -46,17 +48,7 @@ public class FlightsManagementController extends ControllerBase {
         ModelAndView modelAndView = page("admin/flights/list");
         Stream<Flight> flights = flightRepository.findAll().stream()
                 .filter(flight -> !flight.isDeleted());
-
-        if (city != null && !city.isEmpty()) {
-            flights = flights.filter(f -> f.getOrigin().toLowerCase().contains(city.toLowerCase())
-                    || f.getDestination().toLowerCase().contains(city.toLowerCase()));
-        }
-        if (flightNumber != null && !flightNumber.isEmpty()) {
-            flights = flights.filter(f -> f.getFlightNumber().toLowerCase().contains(flightNumber.toLowerCase()));
-        }
-        if (date != null) {
-            flights = flights.filter(f -> f.getDepartureTime().toLocalDate().equals(date));
-        }
+        flights = flightService.searchFilter(flights, city, flightNumber, date);
         List<FlightListViewModel> flightListViewModels = flights.map(flight -> {
             FlightListViewModel vm = new FlightListViewModel();
 
@@ -72,9 +64,7 @@ public class FlightsManagementController extends ControllerBase {
             vm.setOrderCount(flightService.getOrders(flight).size());
             return vm;
         }).collect(Collectors.toList());
-        modelAndView.getModelMap().put("searchCity", city);
-        modelAndView.getModelMap().put("searchFlightNumber", flightNumber);
-        modelAndView.getModelMap().put("searchDate", date);
+        SearchInfos.addToModelAndView(modelAndView, city, flightNumber, date);
         modelAndView.getModelMap().put("flights", flightListViewModels);
         return modelAndView;
     }
@@ -87,7 +77,7 @@ public class FlightsManagementController extends ControllerBase {
 
     @PostMapping("create")
     public ModelAndView create(@ModelAttribute CreateEditFlightViewModel model) {
-        return createOrUpdateFlight(model, UUID.randomUUID());
+        return createOrUpdateFlight(model, UUID.randomUUID(), "admin/flights/create");
     }
 
     @GetMapping("{id}/edit")
@@ -135,7 +125,7 @@ public class FlightsManagementController extends ControllerBase {
         if (flight == null || flightService.getStatus(flight) != FlightStatus.UNPUBLISHED) {
             return notFound();
         }
-        return createOrUpdateFlight(model, id);
+        return createOrUpdateFlight(model, id, "admin/flights/prepub-edit");
     }
 
     @PostMapping("{id}/update")
@@ -149,14 +139,16 @@ public class FlightsManagementController extends ControllerBase {
         flight.setCapacity(model.getCapacity());
         flight.setPrice(model.getPrice());
         List<String> errorMessages = flightService.validate(flight);
-        if (errorMessages.size() > 0) {
-            //show error messages
-        }
-        flightRepository.save(flight);
-        return redirect("/manage/flights");
+        return ErrorMessageHandler.fromViewModel(model, "admin/flights/edit")
+                .addErrorMessages(errorMessages)
+                .onSuccess(() -> {
+                    flightRepository.save(flight);
+                    return redirect("/manage/flights");
+                })
+                .result();
     }
 
-    private ModelAndView createOrUpdateFlight(CreateEditFlightViewModel model, UUID id) {
+    private ModelAndView createOrUpdateFlight(CreateEditFlightViewModel model, UUID id, String viewName) {
         Flight flight = new Flight(id,
                 model.getFlightNumber(),
                 model.getPrice(),
@@ -166,14 +158,17 @@ public class FlightsManagementController extends ControllerBase {
                 model.getArrivalTime(),
                 model.getCapacity());
         List<String> errorMessages = flightService.validate(flight);
-        if (errorMessages.size() > 0) {
-            //show error message
-        }
-        if (model.isPublishNow()) {
-            flight.publish();
-        }
-        flightRepository.save(flight);
-        return redirect("/manage/flights");
+
+        return ErrorMessageHandler.fromViewModel(model, viewName)
+                .addErrorMessages(errorMessages)
+                .onSuccess(() -> {
+                    if (model.isPublishNow()) {
+                        flight.publish();
+                    }
+                    flightRepository.save(flight);
+                    return redirect("/manage/flights");
+                })
+                .result();
     }
 
 

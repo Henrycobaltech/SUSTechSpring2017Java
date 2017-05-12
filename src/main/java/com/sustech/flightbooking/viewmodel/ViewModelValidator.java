@@ -16,7 +16,7 @@ public class ViewModelValidator {
             errorMessages.add("User name can not be empty.");
         }
         if (model.getDisplayName().isEmpty()) {
-            errorMessages.add("Display Name can not be empty");
+            errorMessages.add("Real Name can not be empty");
         }
         if (!idCardRegex.matcher(model.getIdentityNumber()).find()) {
             errorMessages.add("Invalid ID card number.");

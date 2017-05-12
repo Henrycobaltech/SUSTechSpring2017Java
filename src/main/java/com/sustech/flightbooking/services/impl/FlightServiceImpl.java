@@ -11,11 +11,13 @@ import jdk.nashorn.internal.ir.ReturnNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 @Service
 public class FlightServiceImpl implements FlightService {
@@ -73,5 +75,20 @@ public class FlightServiceImpl implements FlightService {
         return seatRange.stream()
                 .limit(flight.getCapacity() - bookedSeats.size())
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Stream<Flight> searchFilter(Stream<Flight> flightStream, String city, String flightNumber, LocalDate departureDate) {
+        if (city != null && !city.isEmpty()) {
+            flightStream = flightStream.filter(f -> f.getOrigin().toLowerCase().contains(city.toLowerCase())
+                    || f.getDestination().toLowerCase().contains(city.toLowerCase()));
+        }
+        if (flightNumber != null && !flightNumber.isEmpty()) {
+            flightStream = flightStream.filter(f -> f.getFlightNumber().toLowerCase().contains(flightNumber.toLowerCase()));
+        }
+        if (departureDate != null) {
+            flightStream = flightStream.filter(f -> f.getDepartureTime().toLocalDate().equals(departureDate));
+        }
+        return flightStream;
     }
 }

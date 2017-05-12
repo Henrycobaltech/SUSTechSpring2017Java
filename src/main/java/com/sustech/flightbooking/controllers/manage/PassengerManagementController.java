@@ -2,8 +2,9 @@ package com.sustech.flightbooking.controllers.manage;
 
 import com.sustech.flightbooking.controllers.ControllerBase;
 import com.sustech.flightbooking.domainmodel.Passenger;
-import com.sustech.flightbooking.persistence.AdministratorsRepository;
+import com.sustech.flightbooking.misc.responseHandling.ErrorMessageHandler;
 import com.sustech.flightbooking.persistence.PassengerRepository;
+import com.sustech.flightbooking.services.UserService;
 import com.sustech.flightbooking.viewmodel.PassengerEditModelViewModel;
 import com.sustech.flightbooking.viewmodel.ViewModelValidator;
 import com.sustech.flightbooking.viewmodel.manage.passengers.EditPassengerViewModel;
@@ -20,13 +21,13 @@ import java.util.UUID;
 public class PassengerManagementController extends ControllerBase {
 
     private final PassengerRepository passengerRepository;
-    private final AdministratorsRepository adminRepository;
+    private final UserService userService;
 
     @Autowired
     public PassengerManagementController(PassengerRepository passengerRepository,
-                                         AdministratorsRepository adminRepository) {
+                                         UserService userService) {
         this.passengerRepository = passengerRepository;
-        this.adminRepository = adminRepository;
+        this.userService = userService;
     }
 
     @GetMapping("")
@@ -61,26 +62,24 @@ public class PassengerManagementController extends ControllerBase {
         if (passenger == null) {
             return notFound();
         }
-        if (adminRepository.findByUserName(model.getUserName()) != null) {
+        if (!userService.isUserNameAvailableFor(passenger, model.getUserName())) {
             errorMessages.add("User name already exists.");
         }
-        if (!passengerRepository.findByUserName(model.getUserName()).equals(passenger)) {
-            errorMessages.add("User name already exists.");
-        }
-        if (!passengerRepository.findByIdCard(model.getIdentityNumber()).equals(passenger)) {
+        if (!userService.isIdCardAvailableFor(passenger, model.getIdentityNumber())) {
             errorMessages.add("ID card is already registered.");
         }
-        if (errorMessages.size() > 0) {
-            ModelAndView modelAndView = pageWithViewModel("register", model);
-            modelAndView.getModelMap().put("errorMessages", errorMessages);
-            return modelAndView;
-        }
-        passenger.setUserName(model.getUserName());
-        passenger.setDisplayName(model.getDisplayName());
-        passenger.setIdentityCardNumber(model.getIdentityNumber());
-        passenger.setPassword(model.getPassword());
 
-        passengerRepository.save(passenger);
-        return redirect("/manage/passengers");
+        return ErrorMessageHandler.fromViewModel(model, "admin/passengers/edit")
+                .addErrorMessages(errorMessages)
+                .onSuccess(() -> {
+                    passenger.setUserName(model.getUserName());
+                    passenger.setDisplayName(model.getDisplayName());
+                    passenger.setIdentityCardNumber(model.getIdentityNumber());
+                    passenger.setPassword(model.getPassword());
+
+                    passengerRepository.save(passenger);
+                    return redirect("/manage/passengers");
+                })
+                .result();
     }
 }

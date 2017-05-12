@@ -4,11 +4,14 @@ import com.sustech.flightbooking.domainmodel.Flight;
 import com.sustech.flightbooking.domainmodel.FlightStatus;
 import com.sustech.flightbooking.domainmodel.Passenger;
 import com.sustech.flightbooking.infrastructure.FlightBookingAuthenticationToken;
+import com.sustech.flightbooking.misc.SearchInfos;
+import com.sustech.flightbooking.misc.responseHandling.ErrorMessageHandler;
 import com.sustech.flightbooking.persistence.AdministratorsRepository;
 import com.sustech.flightbooking.persistence.FlightRepository;
 import com.sustech.flightbooking.persistence.PassengerRepository;
 import com.sustech.flightbooking.services.FlightService;
 import com.sustech.flightbooking.services.IdentityService;
+import com.sustech.flightbooking.services.UserService;
 import com.sustech.flightbooking.viewmodel.LoginViewModel;
 import com.sustech.flightbooking.viewmodel.PassengerEditModelViewModel;
 import com.sustech.flightbooking.viewmodel.ViewModelValidator;
@@ -34,17 +37,19 @@ public class HomeController extends ControllerBase {
     private final FlightRepository flightRepository;
     private final FlightService flightService;
     private final AdministratorsRepository adminRepository;
+    private final UserService userService;
 
 
     @Autowired
     public HomeController(IdentityService identityService, PassengerRepository passengerRepository,
                           FlightRepository flightRepository, FlightService flightService,
-                          AdministratorsRepository adminRepository) {
+                          AdministratorsRepository adminRepository, UserService userService) {
         this.identityService = identityService;
         this.passengerRepository = passengerRepository;
         this.flightRepository = flightRepository;
         this.flightService = flightService;
         this.adminRepository = adminRepository;
+        this.userService = userService;
     }
 
     @GetMapping("/")
@@ -101,26 +106,25 @@ public class HomeController extends ControllerBase {
     @PostMapping("register")
     public ModelAndView register(@ModelAttribute PassengerEditModelViewModel model) {
         List<String> errorMessages = ViewModelValidator.validate(model);
-        if (passengerRepository.findByUserName(model.getUserName()) != null) {
+        if (!userService.isUserNameAvailableFor(null, model.getUserName())) {
             errorMessages.add("User name already exists.");
         }
-        if (adminRepository.findByUserName(model.getUserName()) != null) {
-            errorMessages.add("User name already exists.");
-        }
-        if (passengerRepository.findByIdCard(model.getIdentityNumber()) != null) {
+        if (!userService.isIdCardAvailableFor(null, model.getIdentityNumber())) {
             errorMessages.add("ID card is already registered.");
         }
-        if (errorMessages.size() > 0) {
-            return pageWithErrorMessages("register", model, errorMessages);
-        }
-        Passenger passenger = new Passenger(UUID.randomUUID());
+        return ErrorMessageHandler.fromViewModel(model, "register")
+                .addErrorMessages(errorMessages)
+                .onSuccess(() -> {
+                    Passenger passenger = new Passenger(UUID.randomUUID());
 
-        passenger.setUserName(model.getUserName());
-        passenger.setDisplayName(model.getDisplayName());
-        passenger.setIdentityCardNumber(model.getIdentityNumber());
+                    passenger.setUserName(model.getUserName());
+                    passenger.setDisplayName(model.getDisplayName());
+                    passenger.setIdentityCardNumber(model.getIdentityNumber());
 
-        passengerRepository.save(passenger);
-        return redirect("/login");
+                    passengerRepository.save(passenger);
+                    return redirect("/login");
+                })
+                .result();
     }
 
     @GetMapping("flights")
@@ -130,16 +134,7 @@ public class HomeController extends ControllerBase {
                                              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         Stream<Flight> flights = flightRepository.findAll().stream()
                 .filter(flight -> flightService.getStatus(flight) == FlightStatus.AVAILABLE);
-        if (city != null && !city.isEmpty()) {
-            flights = flights.filter(f -> f.getOrigin().toLowerCase().contains(city.toLowerCase())
-                    || f.getDestination().toLowerCase().contains(city.toLowerCase()));
-        }
-        if (flightNumber != null && !flightNumber.isEmpty()) {
-            flights = flights.filter(f -> f.getFlightNumber().toLowerCase().contains(flightNumber.toLowerCase()));
-        }
-        if (date != null) {
-            flights = flights.filter(f -> f.getDepartureTime().toLocalDate().equals(date));
-        }
+        flights = flightService.searchFilter(flights, city, flightNumber, date);
 
         List<AvailableFlightListViewModel> searchResult = flights.map(flight -> {
             AvailableFlightListViewModel vm = new AvailableFlightListViewModel();
@@ -158,9 +153,7 @@ public class HomeController extends ControllerBase {
                 .collect(Collectors.toList());
         ModelAndView modelAndView = page("availableFlights");
         modelAndView.getModelMap().put("flights", searchResult);
-        modelAndView.getModelMap().put("searchCity", city);
-        modelAndView.getModelMap().put("searchFlightNumber", flightNumber);
-        modelAndView.getModelMap().put("searchDate", date);
+        SearchInfos.addToModelAndView(modelAndView, city, flightNumber, date);
         return modelAndView;
     }
 }
