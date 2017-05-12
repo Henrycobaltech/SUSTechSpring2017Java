@@ -43,7 +43,10 @@ public abstract class FlightBookingUser extends EntityBase {
         } catch (UnsupportedEncodingException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-        return Base64.getEncoder().encodeToString(digest.digest());
+        if (digest != null) {
+            return Base64.getEncoder().encodeToString(digest.digest());
+        }
+        return "";
     }
 
     public abstract String getRole();

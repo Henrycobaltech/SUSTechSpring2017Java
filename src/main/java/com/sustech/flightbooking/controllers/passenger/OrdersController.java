@@ -1,7 +1,6 @@
 package com.sustech.flightbooking.controllers.passenger;
 
 import com.sustech.flightbooking.controllers.ControllerBase;
-import com.sustech.flightbooking.domainmodel.FlightBookingUser;
 import com.sustech.flightbooking.domainmodel.Order;
 import com.sustech.flightbooking.domainmodel.OrderStatus;
 import com.sustech.flightbooking.domainmodel.Passenger;

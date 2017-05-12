@@ -6,7 +6,6 @@ import com.sustech.flightbooking.domainmodel.Passenger;
 import com.sustech.flightbooking.infrastructure.FlightBookingAuthenticationToken;
 import com.sustech.flightbooking.misc.SearchInfos;
 import com.sustech.flightbooking.misc.responseHandling.ErrorMessageHandler;
-import com.sustech.flightbooking.persistence.AdministratorsRepository;
 import com.sustech.flightbooking.persistence.FlightRepository;
 import com.sustech.flightbooking.persistence.PassengerRepository;
 import com.sustech.flightbooking.services.FlightService;
@@ -70,7 +69,7 @@ public class HomeController extends ControllerBase {
         LoginViewModel viewModel = new LoginViewModel();
         viewModel.setReturnUri(returnUri);
         if (identityService.getCurrentUser() != null && !returnUri.isEmpty()) {
-            return pageWithErrorMessages("login", viewModel, errorMessages("You may not have permission accessing that page."));
+            return loginPageWithErrorMessages(viewModel, errorMessages("You may not have permission accessing that page."));
         }
         return pageWithViewModel("login", viewModel);
     }
@@ -86,7 +85,7 @@ public class HomeController extends ControllerBase {
         }
         //clear password
         model.setPassword("");
-        return pageWithErrorMessages("login", model, errorMessages("Invalid user name or password"));
+        return loginPageWithErrorMessages(model, errorMessages("Invalid user name or password"));
     }
 
     @GetMapping("/logout")
@@ -104,10 +103,10 @@ public class HomeController extends ControllerBase {
     @PostMapping("register")
     public ModelAndView register(@ModelAttribute PassengerEditModelViewModel model) {
         List<String> errorMessages = ViewModelValidator.validate(model);
-        if (!userService.isUserNameAvailableFor(null, model.getUserName())) {
+        if (userService.isUserNameRegisteredFor(null, model.getUserName())) {
             errorMessages.add("User name already exists.");
         }
-        if (!userService.isIdCardAvailableFor(null, model.getIdentityNumber())) {
+        if (userService.isIdCardRegisteredFor(null, model.getIdentityNumber())) {
             errorMessages.add("ID card is already registered.");
         }
         return ErrorMessageHandler.fromViewModel(model, "register")
@@ -156,5 +155,11 @@ public class HomeController extends ControllerBase {
         vm.setRemainingSeatsCount(flight.getCapacity() - flightService.getOrders(flight).size());
 
         return vm;
+    }
+
+    private ModelAndView loginPageWithErrorMessages(Object viewModel, List<String> errorMessages) {
+        ModelAndView modelAndView = pageWithViewModel("login", viewModel);
+        modelAndView.getModelMap().put("errorMessages", errorMessages);
+        return modelAndView;
     }
 }

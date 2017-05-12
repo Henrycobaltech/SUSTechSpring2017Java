@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 public class ViewModelValidator {
 
-    private static Pattern idCardRegex = Pattern.compile("^\\d{17}(\\d|X)$");
+    private static final Pattern idCardRegex = Pattern.compile("^\\d{17}(\\d|X)$");
 
     public static List<String> validate(PassengerEditModelViewModel model) {
         ArrayList<String> errorMessages = new ArrayList<>();

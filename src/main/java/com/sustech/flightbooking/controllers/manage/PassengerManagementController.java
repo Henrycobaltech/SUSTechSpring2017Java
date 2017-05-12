@@ -66,10 +66,10 @@ public class PassengerManagementController extends ControllerBase {
         if (passenger == null) {
             return notFound();
         }
-        if (!userService.isUserNameAvailableFor(passenger, model.getUserName())) {
+        if (userService.isUserNameRegisteredFor(passenger, model.getUserName())) {
             errorMessages.add("User name already exists.");
         }
-        if (!userService.isIdCardAvailableFor(passenger, model.getIdentityNumber())) {
+        if (userService.isIdCardRegisteredFor(passenger, model.getIdentityNumber())) {
             errorMessages.add("ID card is already registered.");
         }
 

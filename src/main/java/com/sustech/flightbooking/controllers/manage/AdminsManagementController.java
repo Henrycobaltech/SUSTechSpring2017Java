@@ -74,7 +74,7 @@ public class AdminsManagementController extends ControllerBase {
         List<String> errorMessages = ViewModelValidator.validate(model);
         Administrator admin = adminsRepository.findById(id);
         admin = admin != null ? admin : new Administrator(id);
-        if (!userService.isUserNameAvailableFor(admin, model.getUserName())) {
+        if (userService.isUserNameRegisteredFor(admin, model.getUserName())) {
             errorMessages.add("User name already exists.");
         }
         Administrator finalAdmin = admin;

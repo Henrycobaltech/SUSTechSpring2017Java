@@ -4,7 +4,7 @@ import com.sustech.flightbooking.domainmodel.FlightBookingUser;
 import com.sustech.flightbooking.domainmodel.Passenger;
 
 public interface UserService {
-    boolean isUserNameAvailableFor(FlightBookingUser user, String userName);
+    boolean isUserNameRegisteredFor(FlightBookingUser user, String userName);
 
-    boolean isIdCardAvailableFor(Passenger user, String idCard);
+    boolean isIdCardRegisteredFor(Passenger user, String idCard);
 }

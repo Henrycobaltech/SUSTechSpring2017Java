@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class ErrorMessageHandlerWithErrorMessages {
-    private List<String> errorMessages;
-    private ModelAndView modelAndView;
+    private final List<String> errorMessages;
+    private final ModelAndView modelAndView;
 
     ErrorMessageHandlerWithErrorMessages(ErrorMessageHandler errorMessageHandler, List<String> errorMessages) {
         this.modelAndView = errorMessageHandler.getModelAndView();

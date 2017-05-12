@@ -1,6 +1,5 @@
 package com.sustech.flightbooking.infrastructure;
 
-import com.sustech.flightbooking.domainmodel.Administrator;
 import com.sustech.flightbooking.domainmodel.FlightBookingUser;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;

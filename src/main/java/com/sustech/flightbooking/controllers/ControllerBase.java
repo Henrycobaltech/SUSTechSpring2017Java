@@ -1,11 +1,9 @@
 package com.sustech.flightbooking.controllers;
 
-import com.sun.xml.internal.ws.api.ha.StickyFeature;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,12 +20,8 @@ public abstract class ControllerBase {
     }
 
     protected ModelAndView notFound() {
-        return notFound("");
-    }
-
-    protected ModelAndView notFound(String errorMessage) {
         ModelAndView modelAndView = new ModelAndView("/error/404");
-        modelAndView.getModelMap().put("errorMessage", errorMessage);
+        modelAndView.getModelMap().put("errorMessage", "");
         modelAndView.setStatus(HttpStatus.NOT_FOUND);
         return modelAndView;
     }
@@ -51,11 +45,5 @@ public abstract class ControllerBase {
 
     protected List<String> errorMessages(String... messages) {
         return Arrays.asList(messages);
-    }
-
-    protected ModelAndView pageWithErrorMessages(String viewName, Object viewModel, List<String> errorMessages) {
-        ModelAndView modelAndView = pageWithViewModel(viewName, viewModel);
-        modelAndView.getModelMap().put("errorMessages", errorMessages);
-        return modelAndView;
     }
 }

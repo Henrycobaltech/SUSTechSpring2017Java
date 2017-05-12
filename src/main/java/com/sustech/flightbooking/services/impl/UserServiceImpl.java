@@ -22,13 +22,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean isUserNameAvailableFor(FlightBookingUser user, String userName) {
-        return !(passengerRepository.findByUserName(userName) != user
+    public boolean isUserNameRegisteredFor(FlightBookingUser user, String userName) {
+        return (passengerRepository.findByUserName(userName) != user
                 || adminRepository.findByUserName(userName) != user);
     }
 
     @Override
-    public boolean isIdCardAvailableFor(Passenger user, String idCard) {
-        return passengerRepository.findByIdCard(idCard) == user;
+    public boolean isIdCardRegisteredFor(Passenger user, String idCard) {
+        return passengerRepository.findByIdCard(idCard) != user;
     }
 }
