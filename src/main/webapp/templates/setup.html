@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" data-layout-decorate="~{shared/create-edit}"
+>
+<head>
+    <title>System Setup</title>
+</head>
+<body>
+
+<h1 data-layout-fragment="header">System Setup</h1>
+<form data-layout-fragment="form" class="col-md-6" action="#" data-th-action="@{/setup}"
+      method="post">
+    <h3>An administrator with user name <b>admin</b></h3>
+    <h3>and password <b>123456</b> will be created.</h3>
+    <div class="form-group">
+        <input type="checkbox" id="createFlights" name="createFlights"/>
+        <label for="createFlights">Create Flights</label>
+    </div>
+    <button class="btn btn-primary" type="submit">Setup</button>
+</form>
+</body>
+</html>
