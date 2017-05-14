@@ -17,5 +17,5 @@ public interface FlightService {
 
     List<Integer> getAvailableSeats(Flight flight);
 
-    Stream<Flight> searchFilter(Stream<Flight> flightStream, String city, String flightNumber, LocalDate departureDate);
+    Stream<Flight> search(String city, String flightNumber, LocalDate departureDate);
 }

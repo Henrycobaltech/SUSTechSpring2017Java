@@ -4,6 +4,7 @@ import com.sustech.flightbooking.domainmodel.Flight;
 import com.sustech.flightbooking.domainmodel.FlightStatus;
 import com.sustech.flightbooking.domainmodel.Order;
 import com.sustech.flightbooking.domainmodel.OrderStatus;
+import com.sustech.flightbooking.persistence.FlightRepository;
 import com.sustech.flightbooking.persistence.OrderRepository;
 import com.sustech.flightbooking.services.FlightService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +22,12 @@ import java.util.stream.Stream;
 public class FlightServiceImpl implements FlightService {
 
     private final OrderRepository orderRepository;
+    private final FlightRepository flightRepository;
 
     @Autowired
-    public FlightServiceImpl(OrderRepository orderRepository) {
+    public FlightServiceImpl(OrderRepository orderRepository, FlightRepository flightRepository) {
         this.orderRepository = orderRepository;
+        this.flightRepository = flightRepository;
     }
 
     @Override
@@ -76,7 +79,8 @@ public class FlightServiceImpl implements FlightService {
     }
 
     @Override
-    public Stream<Flight> searchFilter(Stream<Flight> flightStream, String city, String flightNumber, LocalDate departureDate) {
+    public Stream<Flight> search(String city, String flightNumber, LocalDate departureDate) {
+        Stream<Flight> flightStream = flightRepository.findAll().stream();
         if (city != null && !city.isEmpty()) {
             flightStream = flightStream.filter(f -> f.getOrigin().toLowerCase().contains(city.toLowerCase())
                     || f.getDestination().toLowerCase().contains(city.toLowerCase()));

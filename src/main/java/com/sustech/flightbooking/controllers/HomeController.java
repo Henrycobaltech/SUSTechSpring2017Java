@@ -33,18 +33,16 @@ public class HomeController extends ControllerBase {
 
     private final IdentityService identityService;
     private final PassengerRepository passengerRepository;
-    private final FlightRepository flightRepository;
     private final FlightService flightService;
     private final UserService userService;
 
 
     @Autowired
     public HomeController(IdentityService identityService, PassengerRepository passengerRepository,
-                          FlightRepository flightRepository, FlightService flightService,
+                          FlightService flightService,
                           UserService userService) {
         this.identityService = identityService;
         this.passengerRepository = passengerRepository;
-        this.flightRepository = flightRepository;
         this.flightService = flightService;
         this.userService = userService;
     }
@@ -129,13 +127,11 @@ public class HomeController extends ControllerBase {
                                              @RequestParam(value = "flightNumber", required = false) String flightNumber,
                                              @RequestParam(value = "date", required = false)
                                              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        Stream<Flight> flights = flightRepository.findAll().stream()
-                .filter(flight -> flightService.getStatus(flight) == FlightStatus.AVAILABLE);
-        flights = flightService.searchFilter(flights, city, flightNumber, date);
-
-        List<AvailableFlightListViewModel> searchResult = flights
-                .map(this::mapFlightToAvailableFlightListViewModel)
-                .collect(Collectors.toList());
+        List<AvailableFlightListViewModel> searchResult =
+                flightService.search(city, flightNumber, date)
+                        .filter(flight -> flightService.getStatus(flight) == FlightStatus.AVAILABLE)
+                        .map(this::mapFlightToAvailableFlightListViewModel)
+                        .collect(Collectors.toList());
         ModelAndView modelAndView = page("availableFlights");
         modelAndView.getModelMap().put("flights", searchResult);
         SearchInfos.addToModelAndView(modelAndView, city, flightNumber, date);

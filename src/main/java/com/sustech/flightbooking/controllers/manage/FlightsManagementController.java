@@ -46,11 +46,11 @@ public class FlightsManagementController extends ControllerBase {
                               @RequestParam(value = "date", required = false)
                               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         ModelAndView modelAndView = page("admin/flights/list");
-        Stream<Flight> flights = flightRepository.findAll().stream()
-                .filter(flight -> !flight.isDeleted());
-        flights = flightService.searchFilter(flights, city, flightNumber, date);
-        List<FlightListViewModel> flightListViewModels = flights.map(this::mapFlightToViewModel)
-                .collect(Collectors.toList());
+        List<FlightListViewModel> flightListViewModels =
+                flightService.search(city, flightNumber, date)
+                        .filter(f -> !f.isDeleted())
+                        .map(this::mapFlightToViewModel)
+                        .collect(Collectors.toList());
         SearchInfos.addToModelAndView(modelAndView, city, flightNumber, date);
         modelAndView.getModelMap().put("flights", flightListViewModels);
         return modelAndView;
