@@ -3,6 +3,7 @@ package com.sustech.flightbooking.misc.responseHandling;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.Objects;
 
 public class ErrorMessageHandler {
 
@@ -25,6 +26,11 @@ public class ErrorMessageHandler {
     public static ErrorMessageHandler fromViewModel(Object viewModel, String submitView) {
 
         return new ErrorMessageHandler(pageWithViewModel(submitView, viewModel));
+    }
+
+    public ErrorMessageHandler putModelMap(String key, Object value) {
+        this.modelAndView.getModelMap().put(key, value);
+        return this;
     }
 
     public ErrorMessageHandlerWithErrorMessages addErrorMessages(List<String> errorMessages) {

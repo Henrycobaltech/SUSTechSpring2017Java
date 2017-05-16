@@ -8,6 +8,7 @@ import java.util.UUID;
 
 public class OrderAdminViewModel {
     private String passengerName;
+    private String passengerIdCard;
     private int seat;
     private String flightNumber;
     private UUID flightId;
@@ -63,23 +64,32 @@ public class OrderAdminViewModel {
         this.status = status;
     }
 
-    public static OrderAdminViewModel createFromDomainModel(Order order) {
-        OrderAdminViewModel vm = new OrderAdminViewModel();
-        vm.setCreationTime(order.getCreatedTime());
-        vm.setSeat(order.getSeat());
-        vm.setStatus(order.getStatus());
-        vm.setPassengerName(order.getPassenger().getDisplayName());
-        vm.setFlightId(order.getFlight().getId());
-        vm.setFlightNumber(order.getFlight().getFlightNumber());
-        vm.setPrice(order.getPrice());
-        return vm;
-    }
-
     public double getPrice() {
         return price;
     }
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public String getPassengerIdCard() {
+        return passengerIdCard;
+    }
+
+    public void setPassengerIdCard(String passengerIdCard) {
+        this.passengerIdCard = passengerIdCard;
+    }
+
+    public static OrderAdminViewModel createFromDomainModel(Order order) {
+        OrderAdminViewModel vm = new OrderAdminViewModel();
+        vm.setCreationTime(order.getCreatedTime());
+        vm.setSeat(order.getSeat());
+        vm.setStatus(order.getStatus());
+        vm.setPassengerName(order.getPassenger().getDisplayName());
+        vm.setPassengerIdCard(order.getPassenger().getIdentityCardNumber());
+        vm.setFlightId(order.getFlight().getId());
+        vm.setFlightNumber(order.getFlight().getFlightNumber());
+        vm.setPrice(order.getPrice());
+        return vm;
     }
 }

@@ -20,9 +20,9 @@
     <br/>
     <div>
         <ul class="nav nav-tabs" id="mainTabs">
-            <li role="presentation" class="active"><a href="#flight-info" aria-controls="flight-info" role="tab"
-                                                      data-toggle="tab">Flight
-                Info</a></li>
+            <li role="presentation" class="active">
+                <a href="#flight-info" aria-controls="flight-info" role="tab" data-toggle="tab">Flight Info</a>
+            </li>
             <li role="presentation"><a href="#orders" aria-controls="orders" role="tab" data-toggle="tab">Orders</a>
             </li>
         </ul>
@@ -64,6 +64,7 @@
                     <tr>
                         <th>Creation Time</th>
                         <th>Passenger</th>
+                        <th>Passenger ID Card</th>
                         <th>Seat</th>
                         <th>Price</th>
                         <th>Status</th>
@@ -73,6 +74,7 @@
                     <tr data-th-each="order:${model.orders}">
                         <td data-th-text="${order.creationTime}"></td>
                         <td data-th-text="${order.passengerName}"></td>
+                        <td data-th-text="${order.passengerIdCard}"></td>
                         <td data-th-text="${order.seat}"></td>
                         <td data-th-text="${order.price}"></td>
                         <td data-th-text="${order.status}"></td>
@@ -87,9 +89,6 @@
   e.preventDefault()
   $(this).tab('show')
 })
-
-
-
     </script>
 </div>
 </body>

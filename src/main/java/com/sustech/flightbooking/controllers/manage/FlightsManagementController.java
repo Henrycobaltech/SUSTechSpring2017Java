@@ -148,6 +148,7 @@ public class FlightsManagementController extends ControllerBase {
         flight.setPrice(model.getPrice());
         List<String> errorMessages = flightService.validate(flight);
         return ErrorMessageHandler.fromViewModel(model, "admin/flights/edit")
+                .putModelMap("flightId", id)
                 .addErrorMessages(errorMessages)
                 .onSuccess(() -> {
                     flightRepository.save(flight);
@@ -160,6 +161,7 @@ public class FlightsManagementController extends ControllerBase {
         Flight flight = mapCreateEditModelToFlight(model, id);
         List<String> errorMessages = flightService.validate(flight);
         return ErrorMessageHandler.fromViewModel(model, viewName)
+                .putModelMap("flightId", id)
                 .addErrorMessages(errorMessages)
                 .onSuccess(() -> {
                     if (model.isPublishNow()) {

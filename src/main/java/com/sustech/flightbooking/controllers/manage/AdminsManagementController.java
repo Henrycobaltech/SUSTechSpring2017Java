@@ -79,6 +79,7 @@ public class AdminsManagementController extends ControllerBase {
         }
         Administrator finalAdmin = admin;
         return ErrorMessageHandler.fromViewModel(model, viewName)
+                .putModelMap("adminId", id)
                 .addErrorMessages(errorMessages)
                 .onSuccess(() -> {
                     finalAdmin.setUserName(model.getUserName());

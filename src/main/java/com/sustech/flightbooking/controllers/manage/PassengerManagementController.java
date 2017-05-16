@@ -74,6 +74,7 @@ public class PassengerManagementController extends ControllerBase {
         }
 
         return ErrorMessageHandler.fromViewModel(model, "admin/passengers/edit")
+                .putModelMap("passengerId", id)
                 .addErrorMessages(errorMessages)
                 .onSuccess(() -> {
                     passenger.setUserName(model.getUserName());

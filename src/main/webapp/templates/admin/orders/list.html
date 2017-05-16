@@ -15,6 +15,7 @@
             <th>Creation Time</th>
             <th>Flight</th>
             <th>Passenger</th>
+            <th>Passenger ID Card</th>
             <th>Price</th>
             <th>Status</th>
         </tr>
@@ -26,6 +27,7 @@
                 <a data-th-text="${order.flightNumber}"
                    data-th-href="'/manage/flights/'+${order.flightId}"></a></td>
             <td data-th-text="${order.passengerName}"></td>
+            <td data-th-text="${order.passengerIdCard}"></td>
             <td data-th-text="${order.price}"></td>
             <td data-th-text="${order.status}"></td>
         </tr>
