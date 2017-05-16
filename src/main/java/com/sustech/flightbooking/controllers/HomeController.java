@@ -31,20 +31,12 @@ import java.util.stream.Stream;
 @RequestMapping("/")
 public class HomeController extends ControllerBase {
 
-    private final IdentityService identityService;
-    private final PassengerRepository passengerRepository;
     private final FlightService flightService;
-    private final UserService userService;
 
 
     @Autowired
-    public HomeController(IdentityService identityService, PassengerRepository passengerRepository,
-                          FlightService flightService,
-                          UserService userService) {
-        this.identityService = identityService;
-        this.passengerRepository = passengerRepository;
+    public HomeController(FlightService flightService) {
         this.flightService = flightService;
-        this.userService = userService;
     }
 
     @GetMapping("/")
@@ -60,67 +52,6 @@ public class HomeController extends ControllerBase {
     @GetMapping("/passenger")
     public ModelAndView passengerHome() {
         return page("passenger/index");
-    }
-
-    @GetMapping("/login")
-    public ModelAndView loginPage(@RequestParam(value = "returnUri", required = false) String returnUri) {
-        LoginViewModel viewModel = new LoginViewModel();
-        viewModel.setReturnUri(returnUri);
-        if (identityService.getCurrentUser() != null && !returnUri.isEmpty()) {
-            return loginPageWithErrorMessages(viewModel, errorMessages("You may not have permission accessing that page."));
-        }
-        return pageWithViewModel("login", viewModel);
-    }
-
-    @PostMapping("/login")
-    public ModelAndView login(@ModelAttribute LoginViewModel model) {
-        FlightBookingAuthenticationToken token = identityService.login(model.getUserName(), model.getPassword());
-        if (token != null) {
-            String returnUri = model.getReturnUri().isEmpty() ?
-                    ("/" + (token.getRole().equalsIgnoreCase("passenger") ? "passenger" : "manage"))
-                    : model.getReturnUri();
-            return redirect(returnUri);
-        }
-        //clear password
-        model.setPassword("");
-        return loginPageWithErrorMessages(model, errorMessages("Invalid user name or password"));
-    }
-
-    @GetMapping("/logout")
-    public ModelAndView logout() {
-        identityService.logout();
-        return redirect("/");
-    }
-
-    @GetMapping("register")
-    public ModelAndView registerPage() {
-        return pageWithViewModel("register",
-                new PassengerEditModelViewModel());
-    }
-
-    @PostMapping("register")
-    public ModelAndView register(@ModelAttribute PassengerEditModelViewModel model) {
-        List<String> errorMessages = ViewModelValidator.validate(model);
-        if (userService.isUserNameRegisteredFor(null, model.getUserName())) {
-            errorMessages.add("User name already exists.");
-        }
-        if (userService.isIdCardRegisteredFor(null, model.getIdentityNumber())) {
-            errorMessages.add("ID card is already registered.");
-        }
-        return ErrorMessageHandler.fromViewModel(model, "register")
-                .addErrorMessages(errorMessages)
-                .onSuccess(() -> {
-                    Passenger passenger = new Passenger(UUID.randomUUID());
-
-                    passenger.setUserName(model.getUserName());
-                    passenger.setDisplayName(model.getDisplayName());
-                    passenger.setIdentityCardNumber(model.getIdentityNumber());
-                    passenger.setPassword(model.getPassword());
-
-                    passengerRepository.save(passenger);
-                    return redirect("/login");
-                })
-                .result();
     }
 
     @GetMapping("flights")
@@ -154,9 +85,4 @@ public class HomeController extends ControllerBase {
         return vm;
     }
 
-    private ModelAndView loginPageWithErrorMessages(Object viewModel, List<String> errorMessages) {
-        ModelAndView modelAndView = pageWithViewModel("login", viewModel);
-        modelAndView.getModelMap().put("errorMessages", errorMessages);
-        return modelAndView;
-    }
 }
