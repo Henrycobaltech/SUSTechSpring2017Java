@@ -1,10 +1,7 @@
 package com.sustech.flightbooking.controllers;
 
-import com.sustech.flightbooking.domainmodel.Flight;
-import com.sustech.flightbooking.domainmodel.FlightStatus;
 import com.sustech.flightbooking.domainmodel.Passenger;
 import com.sustech.flightbooking.infrastructure.FlightBookingAuthenticationToken;
-import com.sustech.flightbooking.misc.SearchInfos;
 import com.sustech.flightbooking.misc.responseHandling.ErrorMessageHandler;
 import com.sustech.flightbooking.persistence.PassengerRepository;
 import com.sustech.flightbooking.services.FlightService;
@@ -13,17 +10,13 @@ import com.sustech.flightbooking.services.UserService;
 import com.sustech.flightbooking.viewmodel.LoginViewModel;
 import com.sustech.flightbooking.viewmodel.PassengerEditModelViewModel;
 import com.sustech.flightbooking.viewmodel.ViewModelValidator;
-import com.sustech.flightbooking.viewmodel.passenger.flight.AvailableFlightListViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Controller
 public class IdentityController extends ControllerBase {

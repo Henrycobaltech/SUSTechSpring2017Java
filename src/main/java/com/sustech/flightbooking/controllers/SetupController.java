@@ -1,6 +1,5 @@
 package com.sustech.flightbooking.controllers;
 
-import com.mysql.cj.api.xdevapi.CreateTableStatement;
 import com.sustech.flightbooking.services.SetupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

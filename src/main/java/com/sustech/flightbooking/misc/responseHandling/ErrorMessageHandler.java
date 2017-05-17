@@ -3,7 +3,6 @@ package com.sustech.flightbooking.misc.responseHandling;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
-import java.util.Objects;
 
 public class ErrorMessageHandler {
 
