@@ -30,7 +30,6 @@ public class IdentityController extends ControllerBase {
 
     private final IdentityService identityService;
     private final PassengerRepository passengerRepository;
-    private final FlightService flightService;
     private final UserService userService;
 
 
@@ -40,7 +39,6 @@ public class IdentityController extends ControllerBase {
                               UserService userService) {
         this.identityService = identityService;
         this.passengerRepository = passengerRepository;
-        this.flightService = flightService;
         this.userService = userService;
     }
 
