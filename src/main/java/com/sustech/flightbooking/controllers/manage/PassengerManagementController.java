@@ -5,7 +5,6 @@ import com.sustech.flightbooking.domainmodel.Passenger;
 import com.sustech.flightbooking.misc.responseHandling.ErrorMessageHandler;
 import com.sustech.flightbooking.persistence.PassengerRepository;
 import com.sustech.flightbooking.services.UserService;
-import com.sustech.flightbooking.viewmodel.PassengerEditModelViewModel;
 import com.sustech.flightbooking.viewmodel.ViewModelValidator;
 import com.sustech.flightbooking.viewmodel.manage.passengers.EditPassengerViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +59,7 @@ public class PassengerManagementController extends ControllerBase {
     }
 
     @PostMapping("{id}/update")
-    public ModelAndView update(@ModelAttribute PassengerEditModelViewModel model, @PathVariable UUID id) {
+    public ModelAndView update(@ModelAttribute EditPassengerViewModel model, @PathVariable UUID id) {
         Passenger passenger = passengerRepository.findById(id);
         List<String> errorMessages = ViewModelValidator.validate(model);
         if (passenger == null) {

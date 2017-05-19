@@ -1,6 +1,7 @@
 package com.sustech.flightbooking.viewmodel;
 
 import com.sustech.flightbooking.viewmodel.manage.admins.AdminEditViewModel;
+import com.sustech.flightbooking.viewmodel.manage.passengers.EditPassengerViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,13 +11,30 @@ public class ViewModelValidator {
 
     private static final Pattern idCardRegex = Pattern.compile("^\\d{17}(\\d|X)$");
 
-    public static List<String> validate(PassengerEditModelViewModel model) {
+    public static List<String> validate(EditPassengerViewModel model) {
         ArrayList<String> errorMessages = new ArrayList<>();
         if (model.getUserName().isEmpty()) {
             errorMessages.add("User name can not be empty.");
         }
         if (model.getDisplayName().isEmpty()) {
             errorMessages.add("Real Name can not be empty");
+        }
+        if (!idCardRegex.matcher(model.getIdentityNumber()).find()) {
+            errorMessages.add("Invalid ID card number.");
+        }
+        return errorMessages;
+    }
+
+    public static List<String> validate(RegisterViewModel model) {
+        ArrayList<String> errorMessages = new ArrayList<>();
+        if (model.getUserName().isEmpty()) {
+            errorMessages.add("User name can not be empty.");
+        }
+        if (model.getDisplayName().isEmpty()) {
+            errorMessages.add("Real Name can not be empty");
+        }
+        if (!model.getPassword().equals(model.getConfirmPassword())) {
+            errorMessages.add("Passwords does not match.");
         }
         if (!idCardRegex.matcher(model.getIdentityNumber()).find()) {
             errorMessages.add("Invalid ID card number.");
