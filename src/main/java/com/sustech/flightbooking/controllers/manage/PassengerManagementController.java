@@ -80,7 +80,6 @@ public class PassengerManagementController extends ControllerBase {
                     passenger.setUserName(model.getUserName());
                     passenger.setDisplayName(model.getDisplayName());
                     passenger.setIdentityCardNumber(model.getIdentityNumber());
-                    passenger.setPassword(model.getPassword());
 
                     passengerRepository.save(passenger);
                     return redirect("/manage/passengers");

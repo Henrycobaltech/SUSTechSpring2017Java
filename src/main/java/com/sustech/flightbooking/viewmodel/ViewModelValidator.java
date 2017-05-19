@@ -21,12 +21,6 @@ public class ViewModelValidator {
         if (!idCardRegex.matcher(model.getIdentityNumber()).find()) {
             errorMessages.add("Invalid ID card number.");
         }
-        if (model.getPassword().isEmpty()) {
-            errorMessages.add("Password can not be empty.");
-        }
-        if (!model.getPassword().equals(model.getConfirmPassword())) {
-            errorMessages.add("Passwords do not match.");
-        }
         return errorMessages;
     }
 
@@ -34,12 +28,6 @@ public class ViewModelValidator {
         ArrayList<String> errorMessages = new ArrayList<>();
         if (model.getUserName().isEmpty()) {
             errorMessages.add("User name can not be empty.");
-        }
-        if (model.getPassword().isEmpty()) {
-            errorMessages.add("Password can not be empty.");
-        }
-        if (!model.getPassword().equals(model.getConfirmPassword())) {
-            errorMessages.add("Passwords do not match.");
         }
         return errorMessages;
     }

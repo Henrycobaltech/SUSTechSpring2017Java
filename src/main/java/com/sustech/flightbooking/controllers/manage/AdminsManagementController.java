@@ -83,7 +83,6 @@ public class AdminsManagementController extends ControllerBase {
                 .addErrorMessages(errorMessages)
                 .onSuccess(() -> {
                     finalAdmin.setUserName(model.getUserName());
-                    finalAdmin.setPassword(model.getPassword());
                     adminsRepository.save(finalAdmin);
                     return redirect("/manage/admins");
                 })

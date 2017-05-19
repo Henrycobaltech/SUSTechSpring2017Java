@@ -1,5 +1,6 @@
 package com.sustech.flightbooking.services.impl;
 
+import com.sustech.flightbooking.domainmodel.Administrator;
 import com.sustech.flightbooking.domainmodel.FlightBookingUser;
 import com.sustech.flightbooking.domainmodel.Passenger;
 import com.sustech.flightbooking.persistence.AdministratorsRepository;
@@ -23,8 +24,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isUserNameRegisteredFor(FlightBookingUser user, String userName) {
-        return (passengerRepository.findByUserName(userName) != user
-                || adminRepository.findByUserName(userName) != user);
+        Passenger passenger = passengerRepository.findByUserName(userName);
+        if ((passenger != null) && (passenger != user)) {
+            return true;
+        }
+        Administrator admin = adminRepository.findByUserName(userName);
+        return admin != null && admin != user;
     }
 
     @Override
