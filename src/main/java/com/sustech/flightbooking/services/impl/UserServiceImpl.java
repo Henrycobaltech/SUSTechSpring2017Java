@@ -25,15 +25,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean isUserNameRegisteredFor(FlightBookingUser user, String userName) {
         Passenger passenger = passengerRepository.findByUserName(userName);
-        if ((passenger != null) && (passenger != user)) {
+        if ((passenger != null) && !passenger.equals(user)) {
             return true;
         }
         Administrator admin = adminRepository.findByUserName(userName);
-        return admin != null && admin != user;
+        return admin != null && !admin.equals(user);
     }
 
     @Override
     public boolean isIdCardRegisteredFor(Passenger user, String idCard) {
-        return passengerRepository.findByIdCard(idCard) != user;
+        Passenger userFound = passengerRepository.findByIdCard(idCard);
+        return userFound != null && !userFound.equals(user);
     }
 }
