@@ -1,12 +1,16 @@
 package com.sustech.flightbooking.controllers;
 
+import com.sustech.flightbooking.domainmodel.Administrator;
+import com.sustech.flightbooking.domainmodel.FlightBookingUser;
 import com.sustech.flightbooking.domainmodel.Passenger;
 import com.sustech.flightbooking.infrastructure.FlightBookingAuthenticationToken;
 import com.sustech.flightbooking.misc.responseHandling.ErrorMessageHandler;
+import com.sustech.flightbooking.persistence.AdministratorsRepository;
 import com.sustech.flightbooking.persistence.PassengerRepository;
 import com.sustech.flightbooking.services.FlightService;
 import com.sustech.flightbooking.services.IdentityService;
 import com.sustech.flightbooking.services.UserService;
+import com.sustech.flightbooking.viewmodel.ChangePasswordViewModel;
 import com.sustech.flightbooking.viewmodel.LoginViewModel;
 import com.sustech.flightbooking.viewmodel.PassengerEditModelViewModel;
 import com.sustech.flightbooking.viewmodel.ViewModelValidator;
@@ -23,15 +27,17 @@ public class IdentityController extends ControllerBase {
 
     private final IdentityService identityService;
     private final PassengerRepository passengerRepository;
+    private final AdministratorsRepository administratorsRepository;
     private final UserService userService;
 
 
     @Autowired
     public IdentityController(IdentityService identityService, PassengerRepository passengerRepository,
                               FlightService flightService,
-                              UserService userService) {
+                              AdministratorsRepository administratorsRepository, UserService userService) {
         this.identityService = identityService;
         this.passengerRepository = passengerRepository;
+        this.administratorsRepository = administratorsRepository;
         this.userService = userService;
     }
 
@@ -89,7 +95,6 @@ public class IdentityController extends ControllerBase {
                     passenger.setUserName(model.getUserName());
                     passenger.setDisplayName(model.getDisplayName());
                     passenger.setIdentityCardNumber(model.getIdentityNumber());
-                    passenger.setPassword(model.getPassword());
 
                     passengerRepository.save(passenger);
                     return redirect("/login");
@@ -97,10 +102,36 @@ public class IdentityController extends ControllerBase {
                 .result();
     }
 
-
     private ModelAndView loginPageWithErrorMessages(Object viewModel, List<String> errorMessages) {
         ModelAndView modelAndView = pageWithViewModel("login", viewModel);
         modelAndView.getModelMap().put("errorMessages", errorMessages);
         return modelAndView;
+    }
+
+    @GetMapping("changepassword")
+    public ModelAndView changePasswordPage() {
+        return pageWithViewModel("changePassword", new ChangePasswordViewModel());
+    }
+
+    @PostMapping("changepassword")
+    public ModelAndView changePassword(@ModelAttribute ChangePasswordViewModel model) {
+        List<String> errorMessages = ViewModelValidator.validate(model);
+        FlightBookingUser user = identityService.getCurrentUser();
+        if (!user.authenticate(model.getCurrentPassword())) {
+            errorMessages.add("Invalid current password");
+        }
+        return ErrorMessageHandler.fromViewModel(model, "changePassword")
+                .addErrorMessages(errorMessages)
+                .onSuccess(() -> {
+                    user.setPassword(model.getNewPassword());
+                    if (user instanceof Passenger) {
+                        passengerRepository.save((Passenger) user);
+                    } else {
+                        administratorsRepository.save((Administrator) user);
+                    }
+                    return redirect("/");
+                })
+                .result();
+
     }
 }

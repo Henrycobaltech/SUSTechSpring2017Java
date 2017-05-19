@@ -44,8 +44,14 @@
 
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li data-th-if="${loggedIn}"><p class="navbar-text navbar-right">Hello <span
-                        data-th-text="${currentUserDisplayName}"></span> <a href="/logout">Logout</a></p></li>
+                <li data-th-if="${loggedIn}">
+                    <p class="navbar-text navbar-right">
+                        Hello
+                        <span data-th-text="${currentUserDisplayName}"></span> &nbsp;
+                        <a href="/changepassword">Change Password</a>&nbsp;
+                        <a href="/logout">Logout</a>
+                    </p>
+                </li>
                 <li data-th-unless="${loggedIn}"><a href="/login">Login</a></li>
                 <li data-th-unless="${loggedIn}"><a href="/register">Register</a></li>
             </ul>

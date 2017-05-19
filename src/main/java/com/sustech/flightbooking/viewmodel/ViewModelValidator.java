@@ -31,4 +31,15 @@ public class ViewModelValidator {
         }
         return errorMessages;
     }
+
+    public static List<String> validate(ChangePasswordViewModel model) {
+        ArrayList<String> errorMessages = new ArrayList<>();
+        if (model.getCurrentPassword().isEmpty() || model.getConfirmPassword().isEmpty() || model.getNewPassword().isEmpty()) {
+            errorMessages.add("All fields can not be empty.");
+        }
+        if (!model.getNewPassword().equals(model.getConfirmPassword())) {
+            errorMessages.add("Passwords does not match.");
+        }
+        return errorMessages;
+    }
 }

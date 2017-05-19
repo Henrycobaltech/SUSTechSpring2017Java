@@ -24,7 +24,8 @@ public class FlightBookingAuthorizationFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         String path = request.getServletPath();
         if (needsAuthorize(authentication, path, "passenger", "passenger")
-                || needsAuthorize(authentication, path, "manage", "administrator")) {
+                || needsAuthorize(authentication, path, "manage", "administrator")
+                || needsAuthorize(authentication, path, "changepassword", "passenger", "administrator")) {
             response.sendRedirect("/login?returnUri=" + path);
             return;
         }
@@ -32,12 +33,17 @@ public class FlightBookingAuthorizationFilter implements Filter {
     }
 
     private boolean needsAuthorize(FlightBookingAuthenticationToken authentication,
-                                   String path, String requestPath, String role) {
+                                   String path, String requestPath, String... roles) {
         if (path.toLowerCase().startsWith("/" + requestPath)) {
-            if (authentication == null ||
-                    !authentication.getRole().equalsIgnoreCase(role)) {
+            if (authentication == null) {
                 return true;
             }
+            for (String role : roles) {
+                if (authentication.getRole().equalsIgnoreCase(role)) {
+                    return false;
+                }
+            }
+            return true;
         }
         return false;
     }
