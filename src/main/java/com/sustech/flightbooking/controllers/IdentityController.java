@@ -43,7 +43,7 @@ public class IdentityController extends ControllerBase {
     public ModelAndView loginPage(@RequestParam(value = "returnUri", required = false) String returnUri) {
         LoginViewModel viewModel = new LoginViewModel();
         viewModel.setReturnUri(returnUri);
-        if (identityService.getCurrentUser() != null && !returnUri.isEmpty()) {
+        if (identityService.getCurrentUser() != null && returnUri != null && !returnUri.isEmpty()) {
             return loginPageWithErrorMessages(viewModel, errorMessages("You may not have permission accessing that page."));
         }
         return pageWithViewModel("login", viewModel);
